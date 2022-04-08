@@ -1,0 +1,17 @@
+# Ignore Windows generated lock files
+*.lock
+
+# Ignore Mac OS X's invisible '.DS_Store' files
+*.DS_Store
+
+# Ignore Documentation build directory
+/build
+
+# Ignore packages
+/Packages
+/ServerPackages
+/DevPackages
+
+# Ignore Node modules
+/dist
+/node_modules

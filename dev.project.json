@@ -1,0 +1,15 @@
+{
+  "name": "Luanoid - Dev",
+  "tree": {
+    "$className": "DataModel",
+
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+
+      "Packages": {
+        "$path": "Packages",
+        "Luanoid": { "$path": "." }
+      }
+    }
+  }
+}
