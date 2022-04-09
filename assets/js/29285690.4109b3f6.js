@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[476],{97868:function(a){a.exports=JSON.parse('{"sourceUrl":"https://github.com/raphtalia/Luanoid/blob/main","baseUrl":"/Luanoid/","classOrder":["Luanoid","CharacterState","CharacterController","Animator"],"apiCategories":[]}')}}]);
