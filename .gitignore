@@ -15,3 +15,5 @@
 # Ignore Node modules
 /dist
 /node_modules
+
+roblox.toml
