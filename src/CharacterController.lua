@@ -9,6 +9,9 @@ local Constants = require(script.Parent.Constants)
 local RAYCAST_CUSHION = Constants.RAYCAST_CUSHION
 local IS_SERVER = Constants.IS_SERVER
 
+--[=[
+    @class CharacterController
+]=]
 local CharacterController = {}
 local CHARACTER_CONTROLLER_METATABLE = {}
 

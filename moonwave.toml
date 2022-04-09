@@ -1,0 +1,9 @@
+title = "Luanoid"
+
+gitRepoUrl = "https://github.com/raphtalia/Luanoid"
+gitSourceBranch = "main"
+
+classOrder = []
+
+[footer]
+copyright = "Copyright © 2022 raphtalia"

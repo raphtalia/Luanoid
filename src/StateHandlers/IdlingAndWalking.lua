@@ -23,19 +23,19 @@ end
 
 local IdlingAndWalking = {}
 
-function IdlingAndWalking.entered(stateController)
-    local luanoid = stateController.Luanoid
+function IdlingAndWalking.entered(characterController)
+    local luanoid = characterController.Luanoid
     -- We get the state since we don't know if its Idling or Walking
     luanoid.Animator:PlayAnimation(luanoid:GetState().Name)
 end
 
-function IdlingAndWalking.leaving(stateController)
-    local luanoid = stateController.Luanoid
+function IdlingAndWalking.leaving(characterController)
+    local luanoid = characterController.Luanoid
     luanoid.Animator:StopAnimation(luanoid:GetState().Name)
 end
 
-function IdlingAndWalking.step(stateController, dt)
-    local luanoid = stateController.Luanoid
+function IdlingAndWalking.step(characterController, dt)
+    local luanoid = characterController.Luanoid
     local rootPart = luanoid.RootPart
     local hipHeight = luanoid.HipHeight
     local velocity = rootPart.AssemblyLinearVelocity
@@ -44,7 +44,7 @@ function IdlingAndWalking.step(stateController, dt)
     local currentVelocityZ = velocity.Z
     local mover = luanoid.Mover
     local aligner = luanoid.Aligner
-    local groundPos = stateController.RaycastResult.Position
+    local groundPos = characterController.RaycastResult.Position
     local targetVelocity = Vector3.new()
 
     local moveDir = luanoid.MoveDirection
@@ -53,25 +53,25 @@ function IdlingAndWalking.step(stateController, dt)
         targetVelocity = Vector3.new(moveDir.X, 0, moveDir.Z).Unit * luanoid.WalkSpeed
     end
 
-    stateController.Stores.accumulatedTime = (stateController.Stores.accumulatedTime or 0) + dt
+    characterController.Stores.accumulatedTime = (characterController.Stores.accumulatedTime or 0) + dt
 
-    while stateController.Stores.accumulatedTime >= FRAMERATE do
-        stateController.Stores.accumulatedTime -= FRAMERATE
+    while characterController.Stores.accumulatedTime >= FRAMERATE do
+        characterController.Stores.accumulatedTime -= FRAMERATE
 
-        currentVelocityX, stateController.Stores.currentAccelerationX = StepSpring(
+        currentVelocityX, characterController.Stores.currentAccelerationX = StepSpring(
             FRAMERATE,
             currentVelocityX,
-            stateController.Stores.currentAccelerationX or 0,
+            characterController.Stores.currentAccelerationX or 0,
             targetVelocity.X,
             STIFFNESS,
             DAMPING,
             PRECISION
         )
 
-        currentVelocityZ, stateController.Stores.currentAccelerationZ = StepSpring(
+        currentVelocityZ, characterController.Stores.currentAccelerationZ = StepSpring(
             FRAMERATE,
             currentVelocityZ,
-            stateController.Stores.currentAccelerationZ or 0,
+            characterController.Stores.currentAccelerationZ or 0,
             targetVelocity.Z,
             STIFFNESS,
             DAMPING,
@@ -90,10 +90,10 @@ function IdlingAndWalking.step(stateController, dt)
     aUp = math.min(aUp, maxUpImpulse)
     aUp = math.max(-1, aUp)
 
-    local aX = stateController.Stores.currentAccelerationX
-    local aZ = stateController.Stores.currentAccelerationZ
+    local aX = characterController.Stores.currentAccelerationX
+    local aZ = characterController.Stores.currentAccelerationZ
 
-    local normal = stateController.RaycastResult.Normal
+    local normal = characterController.RaycastResult.Normal
     local maxSlopeAngle = math.rad(luanoid.MaxSlopeAngle)
     local maxInclineTan = math.tan(maxSlopeAngle)
     local maxInclineStartTan = math.tan(math.max(0, maxSlopeAngle - math.rad(2.5)))

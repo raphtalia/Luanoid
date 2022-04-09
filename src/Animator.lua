@@ -2,6 +2,9 @@ local Signal = require(game:GetService("ReplicatedStorage").Packages.Signal)
 
 local t = require(script.Parent.Types).Animator
 
+--[=[
+    @class Animator
+]=]
 local Animator = {}
 local ANIMATOR_METATABLE = {}
 ANIMATOR_METATABLE.__index = ANIMATOR_METATABLE

@@ -5,13 +5,13 @@ local CharacterState = require(script.Parent.CharacterState)
 local Constants = require(script.Parent.Constants)
 local RAYCAST_CUSHION = Constants.RAYCAST_CUSHION
 
-return function (stateController)
-    local luanoid = stateController.Luanoid
+return function (characterController)
+    local luanoid = characterController.Luanoid
     local rootPart = luanoid.RootPart
     local curState = luanoid:GetState()
     local groundDistanceGoal = luanoid.HipHeight + rootPart.Size.Y / 2 + RAYCAST_CUSHION
     local currentVelocityY = rootPart.AssemblyLinearVelocity.Y
-    local raycastResult = stateController.RaycastResult
+    local raycastResult = characterController.RaycastResult
 
     local newState
     if luanoid.Health <= 0 then

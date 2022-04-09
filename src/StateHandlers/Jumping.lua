@@ -1,21 +1,21 @@
 local Jumping = {}
 
-function Jumping.entered(stateController)
-    local luanoid = stateController.Luanoid
+function Jumping.entered(characterController)
+    local luanoid = characterController.Luanoid
     luanoid.Jumping:Fire(true)
     local rootPart = luanoid.RootPart
     rootPart:ApplyImpulse(Vector3.new(0, luanoid.JumpPower * rootPart.AssemblyMass, 0))
     luanoid.Animator:PlayAnimation("Jumping")
 end
 
-function Jumping.leaving(stateController)
-    local luanoid = stateController.Luanoid
+function Jumping.leaving(characterController)
+    local luanoid = characterController.Luanoid
     luanoid.Jumping:Fire(false)
     luanoid.Animator:StopAnimation("Jumping")
 end
 
-function Jumping.step(stateController)
-    local luanoid = stateController.Luanoid
+function Jumping.step(characterController)
+    local luanoid = characterController.Luanoid
     luanoid.Mover.Enabled = false
     luanoid.Aligner.Enabled = true
 

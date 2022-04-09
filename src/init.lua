@@ -27,73 +27,256 @@ local Terrain = workspace:FindFirstChildWhichIsA("Terrain")
 local LocalPlayer = Players.LocalPlayer
 local CurrentCamera = workspace.CurrentCamera
 
+--[=[
+    @class Luanoid
+]=]
 local Luanoid = {
     CharacterState,
 }
 local LUANOID_METATABLE = {}
 function LUANOID_METATABLE:__index(i)
     if i == "MoveDirection" then
+        --[=[
+            @within Luanoid
+            @prop MoveDirection Vector3
+            Describes the direction that the Luanoid is walking in, as a unit
+            vector along the X/Z axis.
+        ]=]
         return self.Character:GetAttribute("MoveDirection")
     elseif i == "LookDirection" then
+        --[=[
+        @within Luanoid
+        @prop LookDirection Vector3
+        Describes the direction that the Luanoid is facing, as a unit vector
+        along the X/Z axis.
+    ]=]
         return self.Character:GetAttribute("LookDirection")
     elseif i == "Health" then
+        --[=[
+            @within Luanoid
+            @prop Health number
+            Describes the current health of the Luanoid.
+        ]=]
         return self.Character:GetAttribute("Health")
     elseif i == "MaxHealth" then
+        --[=[
+            @within Luanoid
+            @prop MaxHealth number
+            Describes the maximum health of the Luanoid.
+        ]=]
         return self.Character:GetAttribute("MaxHealth")
     elseif i == "WalkSpeed" then
+        --[=[
+            @within Luanoid
+            @prop WalkSpeed number
+            A reference to a part whose position is trying to be reached by a
+            Luanoid.
+        ]=]
         return self.Character:GetAttribute("WalkSpeed")
     elseif i == "JumpPower" then
+        --[=[
+            @within Luanoid
+            @prop JumpPower number
+            Determines how much upwards force is applied to the Luanoid when
+            jumping.
+        ]=]
         return self.Character:GetAttribute("JumpPower")
     elseif i == "HipHeight" then
+        --[=[
+            @within Luanoid
+            @prop HipHeight number
+            Describes the maximum health of the Luanoid.
+        ]=]
         return self.Character:GetAttribute("HipHeight")
     elseif i == "MaxSlopeAngle" then
+        --[=[
+            @within Luanoid
+            @prop MaxSlopeAngle number
+            Determines the distance off the ground the RootPart should be.
+        ]=]
         return self.Character:GetAttribute("MaxSlopeAngle")
     elseif i == "AutoRotate" then
+        --[=[
+            @within Luanoid
+            @prop AutoRotate boolean
+            AutoRotate sets whether or not the Luanoid will automatically
+            rotate to face in the direction they are moving in.
+        ]=]
         return self.Character:GetAttribute("AutoRotate")
     elseif i == "Jump" then
+        --[=[
+            @within Luanoid
+            @prop Jump boolean
+            If set to true, it will cause the Luanoid to jump.
+        ]=]
         return self.Character:GetAttribute("Jump")
     elseif i == "Animator" then
+        --[=[
+            @within Luanoid
+            @readonly
+            @prop Animator Animator
+            A reference to the Animator responsible assigned to the Luanoid.
+        ]=]
         return rawget(self, "_animator")
     elseif i == "CharacterController" then
+        --[=[
+            @within Luanoid
+            @prop CharacterController CharacterController
+            A reference to the CharacterController assigned to the Luanoid.
+        ]=]
         return rawget(self, "_characterController")
     elseif i == "Character" then
+        --[=[
+            @within Luanoid
+            @readonly
+            @prop Character Model
+            A model controlled by the Luanoid
+        ]=]
         return rawget(self, "_character")
     elseif i == "Floor" then
+        --[=[
+            @within Luanoid
+            @prop Floor BasePart
+            A reference to the Instance the Luanoid is currently standing on.
+            If the luanoid isn't standing on anything, the value of this
+            property will be nil. Although this property is not read-only it
+            should only be edited by StateControllers.
+        ]=]
         return rawget(self, "_floor")
     elseif i == "FloorMaterial" then
+        --[=[
+            @within Luanoid
+            @readonly
+            @prop FloorMaterial Material
+            Describes the Material that the Luanoid is currently standing on.
+            If the Luanoid isn’t standing on anything, the value of this
+            property will be Air.
+        ]=]
         local floor = self.Floor
-        return if floor then Enum.Material[floor.Material] else nil
+        return if floor then Enum.Material[floor.Material] else Enum.Material.Air
     elseif i == "Mover" then
+        --[=[
+            @within Luanoid
+            @readonly
+            @prop Mover VectorForce
+            A force that is applied to the Luanoid’s RootPart to move it.
+            Intended only for use in CharacterControllers.
+        ]=]
         return self.RootPart.Mover
     elseif i == "Aligner" then
+        --[=[
+            @within Luanoid
+            @readonly
+            @prop Aligner AlignOrientation
+            A force that is applied to the Luanoid’s RootPart to orient it.
+            Intended only for use in CharacterControllers.
+        ]=]
         return self.RootPart.Aligner
     elseif i == "RootPart" then
+        --[=[
+            @within Luanoid
+            @readonly
+            @prop RootPart BasePart
+            A reference to the Luanoid's HumanoidRootPart. Despite Luanoids not
+            having Humanoids the RootPart maintains Humanoid in its name for
+            better compatibility.
+        ]=]
         return self.Character:FindFirstChild("HumanoidRootPart")
     elseif i == "RigChanged" then
+        --[=[
+            @within Luanoid
+            @readonly
+            @prop RigChanged Signal: (character: Model)
+            Fires after `SetRig()` finishes executing.
+        ]=]
         return rawget(self, "_rigChanged")
-    elseif i == "AccessoryEquipped" then
-        return rawget(self, "_accessoryEquipped")
-    elseif i == "AccessoryUnequipping" then
-        return rawget(self, "_accessoryUnequipping")
+    elseif i == "AccessoryAdded" then
+        --[=[
+            @within Luanoid
+            @readonly
+            @prop AccessoryAdded Signal: (accessory: Accessory | Model | BasePart)
+            Fires after `AddAccessory()` finishes executing.
+        ]=]
+        return rawget(self, "_accessoryAdded")
+    elseif i == "AccessoryRemoving" then
+        --[=[
+            @within Luanoid
+            @readonly
+            @prop AccessoryRemoving Signal: (accessory: Accessory | Model | BasePart)
+            Fires after `RemoveAccessory()` finishes executing.
+        ]=]
+        return rawget(self, "_accessoryRemoving")
     elseif i == "Died" then
+        --[=[
+            @within Luanoid
+            @readonly
+            @prop Died Signal: (isDead: boolean)
+            Fires after entering or while leaving `CharacterState.Dead`
+        ]=]
         return rawget(self, "_died")
-    elseif i == "FallingDown" then
-        return rawget(self, "_fallingDown")
     elseif i == "FreeFalling" then
+        --[=[
+            @within Luanoid
+            @readonly
+            @prop FreeFalling Signal: (isFreeFalling: boolean)
+            Fires after entering or while leaving `CharacterState.FreeFalling`
+        ]=]
         return rawget(self, "_freeFalling")
     elseif i == "HealthChanged" then
+        --[=[
+            @within Luanoid
+            @readonly
+            @prop HealthChanged Signal: (newHealth: number)
+            Fires after Health is changed
+        ]=]
         return rawget(self, "_healthChanged")
     elseif i == "Jumping" then
+        --[=[
+            @within Luanoid
+            @readonly
+            @prop Jumping Signal: (isJumping: boolean)
+            Fires after entering or while leaving `CharacterState.Jumping`
+        ]=]
         return rawget(self, "_jumping")
     elseif i == "MoveToFinished" then
+        --[=[
+            @within Luanoid
+            @readonly
+            @prop MoveToFinished Signal: (success: boolean)
+            Fires after a promise from `MoveTo()` resolves.
+        ]=]
         return rawget(self, "_moveToFinished")
     elseif i == "Seated" then
+        --[=[
+            @within Luanoid
+            @readonly
+            @unreleased
+            @prop Seated Signal
+        ]=]
         return rawget(self, "_seated")
     elseif i == "StateChanged" then
+        --[=[
+            @within Luanoid
+            @readonly
+            @prop StateChanged Signal: (newState: CharacterState)
+            Fires after the Luanoid's state is changed.
+        ]=]
         return rawget(self, "_stateChanged")
     elseif i == "Touched" then
+        --[=[
+            @within Luanoid
+            @readonly
+            @unreleased
+            @prop Touched Signal
+        ]=]
         return rawget(self, "_touched")
     elseif i == "Destroying" then
+        --[=[
+            @within Luanoid
+            @readonly
+            @prop Destroying Signal
+            Fires while `Destroy()` is executing.
+        ]=]
         return rawget(self, "_destroying")
     else
         return LUANOID_METATABLE[i] or error(i.. " is not a valid member of Luanoid", 2)
@@ -154,29 +337,54 @@ function LUANOID_METATABLE:__newindex(i, v)
         rawset(self, "_characterController", v)
     elseif i == "Floor" then
         t.Floor(v)
-        self.Character:SetAttribute("FloorMaterial", if v then v.Material.Name else nil)
+        self.Character:SetAttribute("FloorMaterial", if v then v.Material.Name else "Air")
     else
         error(i.. " is not a valid member of Luanoid or is unassignable", 2)
     end
 end
 
+--[=[
+    @within Luanoid
+    Creates a new Luanoid.
+
+    @param existingCharacter Model
+    @return Luanoid
+]=]
 function Luanoid.new(existingCharacter)
     t.new(existingCharacter)
 
+    --[=[
+        @within Luanoid
+        @private
+        @prop RigParts {BasePart}
+        List of parts in the current rig.
+    ]=]
+    --[=[
+        @within Luanoid
+        @private
+        @prop RigMotors6Ds {Motor6D}
+        List of motors in the current rig.
+    ]=]
+    --[=[
+        @within Luanoid
+        @private
+        @prop MoveToPromise Promise<boolean>
+        Promise for the current MoveTo operation.
+    ]=]
     local self = setmetatable({
         RigParts = {},
         RigMotors6Ds = {},
+        MoveToPromise = nil,
 
         _character = Instance.new("Model"),
         _floor = nil,
         _characterState = CharacterState.Idling,
         _animator = nil,
         _characterController = nil,
-        _moveToPromise = nil,
 
         _rigChanged = Signal.new(),
-        _accessoryEquipped = Signal.new(),
-        _accessoryUneqipping = Signal.new(),
+        _accessoryAdded = Signal.new(),
+        _accessoryRemoving = Signal.new(),
         _died = Signal.new(),
         _freeFalling = Signal.new(),
         _healthChanged = Signal.new(),
@@ -294,12 +502,23 @@ function Luanoid.new(existingCharacter)
     return self
 end
 
+--[=[
+    @within Luanoid
+    @method Destroy
+    Destroys the Luanoid.
+]=]
 function LUANOID_METATABLE:Destroy()
     self.Destroying:Fire()
     self.CharacterController:Stop()
     self.Character:Destroy()
 end
 
+--[=[
+    @within Luanoid
+    @method SetRig
+    @param rig Model
+    Assigns a rigged model as the Luanoid's character.
+]=]
 function LUANOID_METATABLE:SetRig(rig)
     t.SetRig(rig)
 
@@ -335,6 +554,11 @@ function LUANOID_METATABLE:SetRig(rig)
     self.RigChanged:Fire(character)
 end
 
+--[=[
+    @within Luanoid
+    @method RemoveRig
+    Removes the Luanoid's current character rig.
+]=]
 function LUANOID_METATABLE:RemoveRig()
     local rigParts = rawget(self, "RigParts")
 
@@ -346,6 +570,13 @@ function LUANOID_METATABLE:RemoveRig()
     table.clear(rawget(self, "RigMotors6Ds"))
 end
 
+--[=[
+    @within Luanoid
+    @server
+    @method ApplyDescription
+    @param humanoidDescription HumanoidDescription
+    Makes the character's look match that of the passed in HumanoidDescription.
+]=]
 function LUANOID_METATABLE:ApplyDescription(humanoidDescription)
     t.ApplyDescription(humanoidDescription)
     if IS_CLIENT then
@@ -354,19 +585,44 @@ function LUANOID_METATABLE:ApplyDescription(humanoidDescription)
     applyHumanoidDescription(self, humanoidDescription)
 end
 
+--[=[
+    @within Luanoid
+    @unreleased
+    @method GetAppliedDescription
+    @return HumanoidDescription
+    Returns HumanoidDescription which describes its current look.
+]=]
 -- function LUANOID_METATABLE:GetAppliedDescription()
 --     TODO: Implement
 -- end
 
+--[=[
+    @within Luanoid
+    @method BuildRigFromAttachments
+    Assembles a tree of Motor6D joints by attaching together Attachment objects in a Luanoid's character.
+]=]
 function LUANOID_METATABLE:BuildRigFromAttachments()
     buildRigFromAttachments(self.Character)
 end
 
+--[=[
+    @within Luanoid
+    @method TakeDamage
+    @param damage number
+    Lowers the health of the Luanoid by the given positive amount.
+]=]
 function LUANOID_METATABLE:TakeDamage(damage)
     t.TakeDamage(damage)
     self.Health = math.max(self.Health - damage, 0)
 end
 
+--[=[
+    @within Luanoid
+    @method Move
+    @param moveDirection Vector3
+    @param relativeToCamera boolean?
+    Causes the Lumanoid to walk in the given direction.
+]=]
 function LUANOID_METATABLE:Move(moveDirection, relativeToCamera)
     t.Move(moveDirection, relativeToCamera)
     if relativeToCamera then
@@ -376,15 +632,25 @@ function LUANOID_METATABLE:Move(moveDirection, relativeToCamera)
     end
 end
 
+--[=[
+    @within Luanoid
+    @method MoveTo
+    @param location Vector3?
+    @param part BasePart?
+    @param targetRadius number?
+    @param timeouts number?
+    @return Promise<boolean>
+    Causes the Luanoid to attempt to walk to the given location and part.
+]=]
 function LUANOID_METATABLE:MoveTo(location, part, targetRadius, timeout)
     t.MoveTo(location, part, targetRadius, timeout)
     targetRadius = targetRadius or 2
     timeout = timeout or 8
 
-    local currentMoveTo = rawget(self, "_moveToPromise")
+    local currentMoveTo = rawget(self, "MoveToPromise")
     if currentMoveTo then
         currentMoveTo:Cancel()
-        rawset(self, "_moveToPromise", nil)
+        rawset(self, "MoveToPromise", nil)
     end
 
     return Promise.new(function(resolve, _, onCancel)
@@ -403,7 +669,7 @@ function LUANOID_METATABLE:MoveTo(location, part, targetRadius, timeout)
         until onCancel() or distance < targetRadius or (timeout > 0 and tick() - moveToStartTick > timeout)
 
         self:Move(Vector3.new())
-        rawset(self, "_moveToPromise", nil)
+        rawset(self, "MoveToPromise", nil)
 
         if distance < targetRadius then
             resolve(true)
@@ -415,6 +681,14 @@ function LUANOID_METATABLE:MoveTo(location, part, targetRadius, timeout)
     end)
 end
 
+--[=[
+    @within Luanoid
+    @method AddAccessory
+    @param accessory Accessory | Model | BasePart
+    @param base (Attachment | BasePart)?
+    @param pivot CFrame?
+    Adds an accessory to the Luanoid's character.
+]=]
 function LUANOID_METATABLE:AddAccessory(accessory, base, pivot)
     t.AddAccessory(accessory, base, pivot)
     local character = self.Character
@@ -458,17 +732,33 @@ function LUANOID_METATABLE:AddAccessory(accessory, base, pivot)
     weldConstraint.Parent = primaryPart
     accessory.Parent = character.Accessories
 
-    self.AccessoryEquipped:Fire(accessory)
+    self.AccessoryAdded:Fire(accessory)
 
     return self
 end
 
+--[=[
+    @within Luanoid
+    @method RemoveAccessory
+    @param accessory Accessory | Model | BasePart
+    Removes an accessory from the Luanoid's character.
+]=]
 function LUANOID_METATABLE:RemoveAccessory(accessory)
     t.RemoveAccessory(accessory)
-    self.AccessoryUnequipping:Fire(accessory)
-    accessory:Destroy()
+    if accessory.Parent == self.Character.Accessories then
+        self.AccessoryRemoving:Fire(accessory)
+        accessory:Destroy()
+    else
+        error("Accessory is not attached to this Luanoid", 2)
+    end
 end
 
+--[=[
+    @within Luanoid
+    @method GetAccessories
+    @return {(Accessory | Model | BasePart)}
+    Returns a list of all accessories attached to the Luanoid.
+]=]
 function LUANOID_METATABLE:GetAccessories(attachment)
     t.GetAccessories(attachment)
     if attachment then
@@ -487,11 +777,37 @@ function LUANOID_METATABLE:GetAccessories(attachment)
     end
 end
 
+--[=[
+    @within Luanoid
+    @method RemoveAccessories
+    Removes all accessories from the Luanoid.
+]=]
+function LUANOID_METATABLE:RemoveAccessories()
+    for _,accessory in ipairs(self.Character.Accessories:GetChildren()) do
+        self.AccessoryRemoving:Fire(accessory)
+        accessory:Destroy()
+    end
+end
+
+--[=[
+    @within Luanoid
+    @method GetNetworkOwner
+    @return Player
+    Returns the current player who is the network owner of the Luanoid, or nil in
+    case of the server.
+]=]
 function LUANOID_METATABLE:GetNetworkOwner()
     local owner = self.Character:GetAttribute("NetworkOwner")
     return if owner then Players[owner] else nil
 end
 
+--[=[
+    @within Luanoid
+    @method SetNetworkOwner
+    @param player Player
+    Sets the given player as network owner for this Luanoid. When `player` is
+    nil, the server will be the owner instead of a player.
+]=]
 function LUANOID_METATABLE:SetNetworkOwner(owner)
     t.SetNetworkOwner(owner)
 
@@ -502,6 +818,12 @@ function LUANOID_METATABLE:SetNetworkOwner(owner)
     end
 end
 
+--[=[
+    @within Luanoid
+    @method IsNetworkOwner
+    @return boolean
+    Returns if the current machine is the network owner of the Luanoid.
+]=]
 function LUANOID_METATABLE:IsNetworkOwner()
     local networkOwner = self.Character:GetAttribute("NetworkOwner")
 
@@ -512,10 +834,22 @@ function LUANOID_METATABLE:IsNetworkOwner()
     end
 end
 
+--[=[
+    @within Luanoid
+    @method GetState
+    @return CharacterState
+    Returns the Luanoid's current `CharacterState`.
+]=]
 function LUANOID_METATABLE:GetState()
     return rawget(self, "_characterState")
 end
 
+--[=[
+    @within Luanoid
+    @method ChangeState
+    @param state CharacterState
+    Set the Luanoid to the given `CharacterState`.
+]=]
 function LUANOID_METATABLE:ChangeState(newState)
     t.ChangeState(newState)
 

@@ -1,21 +1,21 @@
 local Dead = {}
 
-function Dead.entered(stateController)
-    local luanoid = stateController.Luanoid
+function Dead.entered(characterController)
+    local luanoid = characterController.Luanoid
     luanoid.Died:Fire(true)
     -- luanoid.Animator:StopAnimations()
-    stateController:Stop()
+    characterController:Stop()
 end
 
-function Dead.leaving(stateController)
-    stateController.Luanoid.Died:Fire(false)
+function Dead.leaving(characterController)
+    characterController.Luanoid.Died:Fire(false)
 end
 
-function Dead.step(stateController)
-    local luanoid = stateController.Luanoid
+function Dead.step(characterController)
+    local luanoid = characterController.Luanoid
     luanoid.Mover.Enabled = false
     luanoid.Aligner.Enabled = false
-    stateController:Stop()
+    characterController:Stop()
 end
 
 return Dead

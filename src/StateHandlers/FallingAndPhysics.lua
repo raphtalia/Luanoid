@@ -1,7 +1,7 @@
 local FallingAndPhysics = {}
 
-function FallingAndPhysics.entered(stateController)
-    local luanoid = stateController.Luanoid
+function FallingAndPhysics.entered(characterController)
+    local luanoid = characterController.Luanoid
     luanoid.FreeFalling:Fire(true)
 
     local rootPart = luanoid.RootPart
@@ -13,8 +13,8 @@ function FallingAndPhysics.entered(stateController)
 	luanoid.Animator:PlayAnimation("Falling")
 end
 
-function FallingAndPhysics.leaving(stateController)
-    local luanoid = stateController.Luanoid
+function FallingAndPhysics.leaving(characterController)
+    local luanoid = characterController.Luanoid
     luanoid.FreeFalling:Fire(false)
 
     local rootPart = luanoid.RootPart
@@ -26,8 +26,8 @@ function FallingAndPhysics.leaving(stateController)
 	luanoid.Animator:StopAnimation("Falling")
 end
 
-function FallingAndPhysics.step(stateController)
-    local luanoid = stateController.Luanoid
+function FallingAndPhysics.step(characterController)
+    local luanoid = characterController.Luanoid
     luanoid.Mover.Enabled = false
 	luanoid.Aligner.Enabled = false
 
@@ -39,7 +39,7 @@ function FallingAndPhysics.step(stateController)
             speeds. A longer than usual raycast is used due to the Luanoids
             often not detecting the ground in time.
         ]]
-		local raycastResult = stateController:CastCollideOnly(rootPart.Position, Vector3.new(0, -20, 0))
+		local raycastResult = characterController:CastCollideOnly(rootPart.Position, Vector3.new(0, -20, 0))
 
 		if raycastResult then
 			rootPart.AssemblyLinearVelocity = Vector3.new(assemblyVel.X, 0, assemblyVel.Z)
