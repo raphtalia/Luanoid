@@ -186,7 +186,8 @@ function LUANOID_METATABLE:__index(i)
         --[=[
             @within Luanoid
             @readonly
-            @prop RigChanged Signal: (character: Model)
+            @tag event
+            @prop RigChanged Signal (character: Model)
             Fires after `SetRig()` finishes executing.
         ]=]
         return rawget(self, "_rigChanged")
@@ -194,7 +195,8 @@ function LUANOID_METATABLE:__index(i)
         --[=[
             @within Luanoid
             @readonly
-            @prop AccessoryAdded Signal: (accessory: Accessory | Model | BasePart)
+            @tag event
+            @prop AccessoryAdded Signal (accessory: Accessory | Model | BasePart)
             Fires after `AddAccessory()` finishes executing.
         ]=]
         return rawget(self, "_accessoryAdded")
@@ -202,7 +204,8 @@ function LUANOID_METATABLE:__index(i)
         --[=[
             @within Luanoid
             @readonly
-            @prop AccessoryRemoving Signal: (accessory: Accessory | Model | BasePart)
+            @tag event
+            @prop AccessoryRemoving Signal (accessory: Accessory | Model | BasePart)
             Fires after `RemoveAccessory()` finishes executing.
         ]=]
         return rawget(self, "_accessoryRemoving")
@@ -210,7 +213,8 @@ function LUANOID_METATABLE:__index(i)
         --[=[
             @within Luanoid
             @readonly
-            @prop Died Signal: (isDead: boolean)
+            @tag event
+            @prop Died Signal (isDead: boolean)
             Fires after entering or while leaving `CharacterState.Dead`
         ]=]
         return rawget(self, "_died")
@@ -218,7 +222,8 @@ function LUANOID_METATABLE:__index(i)
         --[=[
             @within Luanoid
             @readonly
-            @prop FreeFalling Signal: (isFreeFalling: boolean)
+            @tag event
+            @prop FreeFalling Signal (isFreeFalling: boolean)
             Fires after entering or while leaving `CharacterState.FreeFalling`
         ]=]
         return rawget(self, "_freeFalling")
@@ -226,7 +231,8 @@ function LUANOID_METATABLE:__index(i)
         --[=[
             @within Luanoid
             @readonly
-            @prop HealthChanged Signal: (newHealth: number)
+            @tag event
+            @prop HealthChanged Signal (newHealth: number)
             Fires after Health is changed
         ]=]
         return rawget(self, "_healthChanged")
@@ -234,7 +240,8 @@ function LUANOID_METATABLE:__index(i)
         --[=[
             @within Luanoid
             @readonly
-            @prop Jumping Signal: (isJumping: boolean)
+            @tag event
+            @prop Jumping Signal (isJumping: boolean)
             Fires after entering or while leaving `CharacterState.Jumping`
         ]=]
         return rawget(self, "_jumping")
@@ -242,7 +249,8 @@ function LUANOID_METATABLE:__index(i)
         --[=[
             @within Luanoid
             @readonly
-            @prop MoveToFinished Signal: (success: boolean)
+            @tag event
+            @prop MoveToFinished Signal (success: boolean)
             Fires after a promise from `MoveTo()` resolves.
         ]=]
         return rawget(self, "_moveToFinished")
@@ -250,6 +258,7 @@ function LUANOID_METATABLE:__index(i)
         --[=[
             @within Luanoid
             @readonly
+            @tag event
             @unreleased
             @prop Seated Signal
         ]=]
@@ -258,7 +267,8 @@ function LUANOID_METATABLE:__index(i)
         --[=[
             @within Luanoid
             @readonly
-            @prop StateChanged Signal: (newState: CharacterState)
+            @tag event
+            @prop StateChanged Signal (newState: CharacterState)
             Fires after the Luanoid's state is changed.
         ]=]
         return rawget(self, "_stateChanged")
@@ -266,6 +276,7 @@ function LUANOID_METATABLE:__index(i)
         --[=[
             @within Luanoid
             @readonly
+            @tag event
             @unreleased
             @prop Touched Signal
         ]=]
@@ -274,6 +285,7 @@ function LUANOID_METATABLE:__index(i)
         --[=[
             @within Luanoid
             @readonly
+            @tag event
             @prop Destroying Signal
             Fires while `Destroy()` is executing.
         ]=]
@@ -297,10 +309,11 @@ function LUANOID_METATABLE:__newindex(i, v)
         self.Character:SetAttribute("LookDirection", v)
     elseif i == "Health" then
         t.Health(v)
-        self.Character:SetAttribute("Health", v)
+        self.Character:SetAttribute("Health", math.min(v, self.MaxHealth))
     elseif i == "MaxHealth" then
         t.MaxHealth(v)
         self.Character:SetAttribute("MaxHealth", v)
+        self.Character:SetAttribute("Health", math.min(self.Health, v))
     elseif i == "WalkSpeed" then
         t.WalkSpeed(v)
         self.Character:SetAttribute("WalkSpeed", v)
@@ -638,9 +651,10 @@ end
     @param location Vector3?
     @param part BasePart?
     @param targetRadius number?
-    @param timeouts number?
+    @param timeout number?
     @return Promise<boolean>
-    Causes the Luanoid to attempt to walk to the given location and part.
+    Causes the Luanoid to attempt to walk to the given location and part. Use a
+    timeout of 0 for no timeout. The returned promise can also be cancelled.
 ]=]
 function LUANOID_METATABLE:MoveTo(location, part, targetRadius, timeout)
     t.MoveTo(location, part, targetRadius, timeout)
@@ -838,7 +852,7 @@ end
     @within Luanoid
     @method GetState
     @return CharacterState
-    Returns the Luanoid's current `CharacterState`.
+    Returns the Luanoid's current CharacterState.
 ]=]
 function LUANOID_METATABLE:GetState()
     return rawget(self, "_characterState")
@@ -848,7 +862,7 @@ end
     @within Luanoid
     @method ChangeState
     @param state CharacterState
-    Set the Luanoid to the given `CharacterState`.
+    Set the Luanoid to the given CharacterState.
 ]=]
 function LUANOID_METATABLE:ChangeState(newState)
     t.ChangeState(newState)

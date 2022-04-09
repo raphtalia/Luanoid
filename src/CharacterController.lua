@@ -11,32 +11,103 @@ local IS_SERVER = Constants.IS_SERVER
 
 --[=[
     @class CharacterController
+    CharacterControllers are responsible for the state handling and physics of
+    the Luanoid such as movement. Luanoids can accept different
+    CharacterControllers by setting the `CharacterController` propery on them.
+    This page documents the default provided CharacterController.
 ]=]
 local CharacterController = {}
 local CHARACTER_CONTROLLER_METATABLE = {}
 
 function CHARACTER_CONTROLLER_METATABLE:__index(i)
     if i == "Luanoid" then
+        --[=[
+            @within CharacterController
+            @readonly
+            @prop Luanoid Luanoid
+            Reference to the Luanoid this CharacterController is attached to.
+        ]=]
         return rawget(self, "_luanoid")
     elseif i == "RaycastParams" then
+        --[=[
+            @within CharacterController
+            @prop RaycastParams RaycastParams
+            RaycastParams used to cast to the ground underneath the Luanoid's character.
+        ]=]
         return rawget(self, "_raycastParams")
     elseif i == "Running" then
+        --[=[
+            @within CharacterController
+            @readonly
+            @prop Running boolean
+            Whether the CharacterController is currently running.
+        ]=]
         return rawget(self, "_running")
     elseif i == "FiniteStateMachine" then
+        --[=[
+            @within CharacterController
+            @prop FiniteStateMachine (characterController: CharacterController) -> CharacterState
+            Callback that returns a `CharacterState` the Luanoid should currently be in.
+        ]=]
         error("FiniteStateMachine is write-only", 2)
     elseif i == "States" then
+        --[=[
+            @within CharacterController
+            @readonly
+            @prop States {[CharacterState]: { Entered: Signal, Leaving: Signal, Step: Signal }}
+            Table of signals fired when a state is entered, leaving, or stepped.
+        ]=]
         return rawget(self, "_states")
     elseif i == "LastState" then
+        --[=[
+            @within CharacterController
+            @readonly
+            @prop LastState CharacterState
+            The previous CharacterState applied to the Launoid.
+        ]=]
         return rawget(self, "_lastState")
     elseif i == "StateEnterTick" then
+        --[=[
+            @within CharacterController
+            @readonly
+            @prop StateEnterTick number
+            The time the Luanoid entered its current CharacterState using `tick()`.
+        ]=]
         return rawget(self, "_stateEnterTick")
     elseif i == "StateEnterPosition" then
+        --[=[
+            @within CharacterController
+            @readonly
+            @prop StateEnterPosition Vector3
+            The position the Luanoid entered its current CharacterState.
+        ]=]
         return rawget(self, "_stateEnterPosition")
     elseif i == "RaycastResult" then
+        --[=[
+            @within CharacterController
+            @readonly
+            @prop RaycastResult RaycastResult
+            The CharacterController casts a ray to the ground from the corners
+            and center of the RootPart. This is the result of the ray hitting
+            closest to the RootPart.
+        ]=]
         return rawget(self, "_raycastResult")
     elseif i == "RaycastResults" then
+        --[=[
+            @within CharacterController
+            @readonly
+            @prop RaycastResults {RaycastResult}
+            All rays casted by the CharacterController on this step of the
+            simulation.
+        ]=]
         return rawget(self, "_raycastResults")
     elseif i == "Stores" then
+        --[=[
+            @within CharacterController
+            @prop Stores {[string]: any}
+            Container for data to be stored and shared between the state
+            handlers and FiniteStateMachine.
+        ]=]
         return rawget(self, "_stores")
     else
         return CHARACTER_CONTROLLER_METATABLE[i] or error(i.. " is not a valid member of CharacterController", 2)
@@ -55,6 +126,15 @@ function CHARACTER_CONTROLLER_METATABLE:__newindex(i, v)
     end
 end
 
+--[=[
+    @within CharacterController
+    Creates a new CharacterController.
+
+    @param luanoid Luanoid
+    @param states CharacterState
+    @param fsm (characterController: CharacterController) -> CharacterState
+    @return CharacterController
+]=]
 function CharacterController.new(luanoid, states, fsm)
     t.new(luanoid, states, fsm)
 
@@ -93,6 +173,15 @@ function CharacterController.new(luanoid, states, fsm)
     return setmetatable(self, CHARACTER_CONTROLLER_METATABLE)
 end
 
+--[=[
+    @within CharacterController
+    @method CastCollideOnly
+    @param origin Vector3
+    @param dir Vector3
+    @return RaycastResult
+    Casts a ray while ignoring all Instances with `CanCollide` set to `false`.
+    Intended for use primarily within the CharacterController.
+]=]
 function CHARACTER_CONTROLLER_METATABLE:CastCollideOnly(origin, dir)
     local originalFilter = self.RaycastParams.FilterDescendantsInstances
     local tempFilter = self.RaycastParams.FilterDescendantsInstances
@@ -116,10 +205,21 @@ function CHARACTER_CONTROLLER_METATABLE:CastCollideOnly(origin, dir)
     until not result
 end
 
+--[=[
+    @within CharacterController
+    @method GetStateElapsedTime
+    @return number
+    Returns the elapsed time since the Luanoid entering its current state.
+]=]
 function CHARACTER_CONTROLLER_METATABLE:GetStateElapsedTime()
     return tick() - self._stateEnterTick
 end
 
+--[=[
+    @within CharacterController
+    @method Start
+    Starts the CharacterController's simulation.
+]=]
 function CHARACTER_CONTROLLER_METATABLE:Start()
     local heartbeat = rawget(self, "_heartbeat")
     if not heartbeat or (heartbeat and not heartbeat.Connected) then
@@ -134,6 +234,11 @@ function CHARACTER_CONTROLLER_METATABLE:Start()
     end
 end
 
+--[=[
+    @within CharacterController
+    @method Stop
+    Stops the CharacterController's simulation.
+]=]
 function CHARACTER_CONTROLLER_METATABLE:Stop()
     local heartbeat = rawget(self, "_heartbeat")
 
@@ -144,6 +249,13 @@ function CHARACTER_CONTROLLER_METATABLE:Stop()
     end
 end
 
+--[=[
+    @within CharacterController
+    @private
+    @method _step
+    @param dt number
+    Performs a single step of the CharacterController's simulation.
+]=]
 function CHARACTER_CONTROLLER_METATABLE:_step(dt)
     local luanoid = self.Luanoid
     local rootPart = luanoid.RootPart
