@@ -3,7 +3,16 @@ title = "Luanoid"
 gitRepoUrl = "https://github.com/raphtalia/Luanoid"
 gitSourceBranch = "main"
 
-classOrder = []
+classOrder = [
+  "Luanoid",
+  "CharacterState",
+  "CharacterController",
+  "Animator",
+]
+
+[home]
+enabled = true
+includeReadme = true
 
 [footer]
 copyright = "Copyright © 2022 raphtalia"

@@ -7,7 +7,10 @@ local t = require(script.Parent.Types).Animator
     Animators are
     responsible for playing animations on the Luanoid primarily through the
     CharacterController. Luanoids can accept different Animators by setting the
-    `Animator` property on them. This page documents the default provided Animator.
+    `Animator` property on them.
+
+    See [Custom Animators](/docs/customAnimators) for writing your own
+    Animator.
 ]=]
 local Animator = {}
 local ANIMATOR_METATABLE = {}

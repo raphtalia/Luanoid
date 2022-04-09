@@ -14,7 +14,9 @@ local IS_SERVER = Constants.IS_SERVER
     CharacterControllers are responsible for the state handling and physics of
     the Luanoid such as movement. Luanoids can accept different
     CharacterControllers by setting the `CharacterController` propery on them.
-    This page documents the default provided CharacterController.
+
+    See [Custom CharacterControllers](/docs/customCharacterControllers) for
+    writing your own CharacterController.
 ]=]
 local CharacterController = {}
 local CHARACTER_CONTROLLER_METATABLE = {}

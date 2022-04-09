@@ -23,15 +23,19 @@ local IS_CLIENT = Constants.IS_CLIENT
 local applyHumanoidDescription = require(script.Util.applyHumanoidDescription)
 local buildRigFromAttachments = require(script.Util.buildRigFromAttachments)
 
-local Terrain = workspace:FindFirstChildWhichIsA("Terrain")
+-- local Terrain = workspace:FindFirstChildWhichIsA("Terrain")
 local LocalPlayer = Players.LocalPlayer
 local CurrentCamera = workspace.CurrentCamera
 
 --[=[
     @class Luanoid
 ]=]
+--[=[
+    @within Luanoid
+    @prop CharacterState EnumList<CharacterState>
+]=]
 local Luanoid = {
-    CharacterState,
+    CharacterState = CharacterState,
 }
 local LUANOID_METATABLE = {}
 function LUANOID_METATABLE:__index(i)
@@ -335,8 +339,8 @@ function LUANOID_METATABLE:__newindex(i, v)
     elseif i == "Animator" then
         t.Animator(v)
 
-        if self.CharacterController then
-            self.CharacterController:Stop()
+        if self.Animator then
+            self.Animator:StopAnimations()
         end
 
         rawset(self, "_animator", v)
@@ -423,8 +427,8 @@ function Luanoid.new(existingCharacter)
     local moveDirAttachment = Instance.new("Attachment")
     moveDirAttachment.Name = "MoveDirection"
 
-    local lookDirAttachment = Instance.new("Attachment")
-    lookDirAttachment.Name = "LookDirection"
+    -- local lookDirAttachment = Instance.new("Attachment")
+    -- lookDirAttachment.Name = "LookDirection"
 
     local humanoidRootPart = Instance.new("Part")
     humanoidRootPart.Name = "HumanoidRootPart"
@@ -450,7 +454,7 @@ function Luanoid.new(existingCharacter)
     aligner.Parent = humanoidRootPart
 
     moveDirAttachment.Parent = humanoidRootPart
-    lookDirAttachment.Parent = Terrain
+    -- lookDirAttachment.Parent = Terrain
 
     local accessoriesFolder = Instance.new("Folder")
     accessoriesFolder.Name = "Accessories"
@@ -669,13 +673,12 @@ function LUANOID_METATABLE:MoveTo(location, part, targetRadius, timeout)
 
     return Promise.new(function(resolve, _, onCancel)
         local rootPart = self.RootPart
-        local hipHeight = self.HipHeight
         local moveToStartTick = tick()
 
         local distance
         repeat
             local target = if location and part then (part.CFrame * location).Position else location or part.Position
-            distance = ((rootPart.Position - Vector3.new(0, hipHeight, 0)) - target).Magnitude
+            distance = ((rootPart.Position - Vector3.new(0, rootPart.Size.Y / 2 + self.HipHeight, 0)) - target).Magnitude
 
             self:Move((target - rootPart.Position).Unit)
 
