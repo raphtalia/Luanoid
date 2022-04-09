@@ -21,6 +21,35 @@ realm = "shared"
 Luanoid = "raphtalia/luanoid@^1"
 ```
 
+## Usage
+
+Grab an R15 rig or the [UV-wrapped Dogu15 rig in the repository](https://github.com/raphtalia/Luanoid/blob/17f8acf15d01ccca7f94599d51ba26c613d9e587/assets/DoguXCV.rbxm)
+and place it in ReplicatedStorage. Then run the example below in a server script and it will create a Luanoid character
+and have it walk somewhere.
+
+```lua
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Luanoid = require(ReplicatedStorage.Packages.Luanoid)
+
+-- L15 is used to abbreviate Luanoid R15
+local l15 = Luanoid.new()
+l15:SetRig(ReplicatedStorage.DoguXCV:Clone())
+l15.Character.Parent = workspace
+
+-- Currently ApplyDescription() only works while on the server and character is under Workspace
+l15:ApplyDescription(Players:GetHumanoidDescriptionFromUserId(72938051))
+l15.CharacterController:Start()
+
+-- MoveTo() returns a Promise
+if l15:MoveTo(Vector3.new(32, 0, 32)):expect() then
+    print("reached target! :D")
+else
+    print("failed to reach target :(")
+end
+```
+
 ## Limitations
 
 - :white_check_mark: - Fully supported
