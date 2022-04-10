@@ -49,11 +49,11 @@ function LUANOID_METATABLE:__index(i)
         return self.Character:GetAttribute("MoveDirection")
     elseif i == "LookDirection" then
         --[=[
-        @within Luanoid
-        @prop LookDirection Vector3
-        Describes the direction that the Luanoid is facing, as a unit vector
-        along the X/Z axis.
-    ]=]
+            @within Luanoid
+            @prop LookDirection Vector3
+            Describes the direction that the Luanoid is facing, as a unit vector
+            along the X/Z axis.
+        ]=]
         return self.Character:GetAttribute("LookDirection")
     elseif i == "Health" then
         --[=[
@@ -157,7 +157,7 @@ function LUANOID_METATABLE:__index(i)
             property will be Air.
         ]=]
         local floor = self.Floor
-        return if floor then Enum.Material[floor.Material] else Enum.Material.Air
+        return if floor then floor.Material else Enum.Material.Air
     elseif i == "Mover" then
         --[=[
             @within Luanoid
@@ -354,6 +354,7 @@ function LUANOID_METATABLE:__newindex(i, v)
         rawset(self, "_characterController", v)
     elseif i == "Floor" then
         t.Floor(v)
+        rawset(self, "_floor", v)
         self.Character:SetAttribute("FloorMaterial", if v then v.Material.Name else "Air")
     else
         error(i.. " is not a valid member of Luanoid or is unassignable", 2)
@@ -667,7 +668,7 @@ function LUANOID_METATABLE:MoveTo(location, part, targetRadius, timeout)
 
     local currentMoveTo = rawget(self, "MoveToPromise")
     if currentMoveTo then
-        currentMoveTo:Cancel()
+        currentMoveTo:cancel()
         rawset(self, "MoveToPromise", nil)
     end
 
@@ -870,12 +871,10 @@ end
 function LUANOID_METATABLE:ChangeState(newState)
     t.ChangeState(newState)
 
-    rawset(self, "_characterState", newState)
-    self.Character:SetAttribute("CharacterState", newState.Name)
-
     local curState = self:GetState()
     if newState ~= curState then
-        rawset(self, "_state", newState)
+        rawset(self, "_characterState", newState)
+        self.Character:SetAttribute("CharacterState", newState.Name)
         self.StateChanged:Fire(newState, curState)
     end
 end

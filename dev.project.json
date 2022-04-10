@@ -9,7 +9,15 @@
       "Packages": {
         "$path": "Packages",
         "Luanoid": { "$path": "." }
-      }
+      },
+
+      "DevPackages": { "$path": "DevPackages" }
+    },
+
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+
+      "tests": { "$path": "tests" }
     }
   }
 }

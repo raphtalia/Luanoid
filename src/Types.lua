@@ -16,27 +16,27 @@ return {
         end,
 
         Health = function(v)
-            assert(t.numberPositive(v))
+            assert(t.numberMin(0)(v))
         end,
 
         MaxHealth = function(v)
-            assert(t.numberPositive(v))
+            assert(t.numberMin(0)(v))
         end,
 
         WalkSpeed = function(v)
-            assert(t.numberPositive(v))
+            assert(t.numberMin(0)(v))
         end,
 
         JumpPower = function(v)
-            assert(t.numberPositive(v))
+            assert(t.numberMin(0)(v))
         end,
 
         HipHeight = function(v)
-            assert(t.numberPositive(v))
+            assert(t.numberMin(0)(v))
         end,
 
         MaxSlopeAngle = function(v)
-            assert(t.numberPositive(v))
+            assert(t.numberMin(0)(v))
         end,
 
         AutoRotate = function(v)
