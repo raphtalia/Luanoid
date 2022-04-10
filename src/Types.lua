@@ -84,8 +84,8 @@ return {
             }))(rig))
         end,
 
-        ApplyDescription = function(humanoidDescription)
-            assert(t.instanceOf("HumanoidDescription")(humanoidDescription))
+        ApplyDescription = function(humanoidDescription, rigType)
+            assert(t.tuple(t.instanceOf("HumanoidDescription"), t.optional(t.enum(Enum.HumanoidRigType)))(humanoidDescription, rigType))
         end,
 
         TakeDamage = function(damage)
@@ -129,8 +129,8 @@ return {
         end,
     },
     Animator = {
-        LoadAnimation = function(animation, name)
-            assert(t.tuple(t.instanceOf("Animation"), t.string)(animation, name))
+        LoadAnimation = function(name, animation)
+            assert(t.tuple(t.string, t.instanceOf("Animation"))(name, animation))
         end,
 
         PlayAnimation = function(name)

@@ -4,15 +4,12 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Luanoid = require(ReplicatedStorage.Packages.Luanoid)
 return function()
     describe("Luanoid", function()
-        local rig = Players:CreateHumanoidModelFromDescription(Instance.new("HumanoidDescription"), Enum.HumanoidRigType.R15)
-        rig.Humanoid:Destroy()
-
         local l15
 
         beforeEach(function()
             l15 = Luanoid.new()
-            l15:SetRig(rig:Clone())
             l15.Character.Parent = workspace
+            l15:ApplyDescription(Instance.new("HumanoidDescription"), Enum.HumanoidRigType.R15)
             l15.CharacterController:Start()
         end)
 
@@ -192,22 +189,140 @@ return function()
             connection:Disconnect()
         end)
 
-        it("SetRig() should not error", function()
-            expect(function()
-                l15:SetRig(rig:Clone())
-            end).never.to.throw()
-        end)
-
         it("RemoveRig() should not error", function()
             expect(function()
                 l15:RemoveRig()
             end).never.to.throw()
         end)
 
-        it("ApplyDescription() should not error", function()
-            expect(function()
-                l15:ApplyDescription(Instance.new("HumanoidDescription"))
-            end).never.to.throw()
+        local testDescription = Instance.new("HumanoidDescription")
+        local bodyColor = Color3.new(0, 1, 0)
+        testDescription.HairAccessory = "4332970160"
+        testDescription.HatAccessory = "3810248423"
+        testDescription.HeadColor = bodyColor
+        testDescription.LeftArmColor = bodyColor
+        testDescription.LeftLegColor = bodyColor
+        testDescription.RightArmColor = bodyColor
+        testDescription.RightLegColor = bodyColor
+        testDescription.TorsoColor = bodyColor
+        testDescription.Face = 209994875
+        testDescription.Pants = 3925758563
+        testDescription.Shirt = 227710697
+        -- Currently we do not test scaling as it is not fully implemented
+
+        it("ApplyDescription() should keep rig", function()
+            local character = l15.Character
+            local rigParts = {unpack(rawget(l15, "RigParts"))}
+            l15:ApplyDescription(testDescription)
+            for _,part in ipairs(rigParts) do
+                expect(part.Parent).to.equal(character)
+            end
+            expect(character:FindFirstChild("Humanoid")).to.equal(nil)
+            expect(character:FindFirstChild("Animate")).to.equal(nil)
+            expect(character:FindFirstChild("Shirt")).to.equal(nil)
+            expect(character:FindFirstChild("Pants")).to.equal(nil)
+            expect(character:FindFirstChild("Body Colors")).to.equal(nil)
+            expect(character.Accessories:FindFirstChild("Black Bow"):IsA("Accessory")).to.equal(true)
+            expect(character.Accessories:FindFirstChild("Bun with Waves"):IsA("Accessory")).to.equal(true)
+            expect(character.Head.Color).to.equal(bodyColor)
+            expect(character.LeftUpperArm.Color).to.equal(bodyColor)
+            expect(character.LeftLowerArm.Color).to.equal(bodyColor)
+            expect(character.LeftHand.Color).to.equal(bodyColor)
+            expect(character.RightUpperArm.Color).to.equal(bodyColor)
+            expect(character.RightLowerArm.Color).to.equal(bodyColor)
+            expect(character.RightHand.Color).to.equal(bodyColor)
+            expect(character.LeftUpperLeg.Color).to.equal(bodyColor)
+            expect(character.LeftLowerLeg.Color).to.equal(bodyColor)
+            expect(character.LeftFoot.Color).to.equal(bodyColor)
+            expect(character.RightUpperLeg.Color).to.equal(bodyColor)
+            expect(character.RightLowerLeg.Color).to.equal(bodyColor)
+            expect(character.RightFoot.Color).to.equal(bodyColor)
+            expect(character.UpperTorso.Color).to.equal(bodyColor)
+            expect(character.LowerTorso.Color).to.equal(bodyColor)
+            expect(character.Head.face.Texture:match("209713952")).to.never.equal(nil)
+            expect(character.LeftUpperArm.TextureID:match("227710696")).to.never.equal(nil)
+            expect(character.LeftLowerArm.TextureID:match("227710696")).to.never.equal(nil)
+            expect(character.LeftHand.TextureID:match("227710696")).to.never.equal(nil)
+            expect(character.RightUpperArm.TextureID:match("227710696")).to.never.equal(nil)
+            expect(character.RightLowerArm.TextureID:match("227710696")).to.never.equal(nil)
+            expect(character.RightHand.TextureID:match("227710696")).to.never.equal(nil)
+            expect(character.UpperTorso.TextureID:match("227710696")).to.never.equal(nil)
+            expect(character.LowerTorso.TextureID:match("227710696")).to.never.equal(nil)
+            expect(character.LeftUpperLeg.TextureID:match("3925758521")).to.never.equal(nil)
+            expect(character.LeftLowerLeg.TextureID:match("3925758521")).to.never.equal(nil)
+            expect(character.LeftFoot.TextureID:match("3925758521")).to.never.equal(nil)
+            expect(character.RightUpperLeg.TextureID:match("3925758521")).to.never.equal(nil)
+            expect(character.RightLowerLeg.TextureID:match("3925758521")).to.never.equal(nil)
+            expect(character.RightFoot.TextureID:match("3925758521")).to.never.equal(nil)
+        end)
+
+        it("ApplyDescription() should apply R15 rig", function()
+            local character = l15.Character
+            local rigParts = {unpack(rawget(l15, "RigParts"))}
+            l15:ApplyDescription(testDescription, Enum.HumanoidRigType.R15)
+            for _,part in ipairs(rigParts) do
+                expect(part.Parent).to.equal(nil)
+            end
+            expect(character:FindFirstChild("Humanoid")).to.equal(nil)
+            expect(character:FindFirstChild("Animate")).to.equal(nil)
+            expect(character:FindFirstChild("Shirt")).to.equal(nil)
+            expect(character:FindFirstChild("Pants")).to.equal(nil)
+            expect(character:FindFirstChild("Body Colors")).to.equal(nil)
+            expect(character.Accessories:FindFirstChild("Black Bow"):IsA("Accessory")).to.equal(true)
+            expect(character.Accessories:FindFirstChild("Bun with Waves"):IsA("Accessory")).to.equal(true)
+            expect(character.Head.Color).to.equal(bodyColor)
+            expect(character.LeftUpperArm.Color).to.equal(bodyColor)
+            expect(character.LeftLowerArm.Color).to.equal(bodyColor)
+            expect(character.LeftHand.Color).to.equal(bodyColor)
+            expect(character.RightUpperArm.Color).to.equal(bodyColor)
+            expect(character.RightLowerArm.Color).to.equal(bodyColor)
+            expect(character.RightHand.Color).to.equal(bodyColor)
+            expect(character.LeftUpperLeg.Color).to.equal(bodyColor)
+            expect(character.LeftLowerLeg.Color).to.equal(bodyColor)
+            expect(character.LeftFoot.Color).to.equal(bodyColor)
+            expect(character.RightUpperLeg.Color).to.equal(bodyColor)
+            expect(character.RightLowerLeg.Color).to.equal(bodyColor)
+            expect(character.RightFoot.Color).to.equal(bodyColor)
+            expect(character.UpperTorso.Color).to.equal(bodyColor)
+            expect(character.LowerTorso.Color).to.equal(bodyColor)
+            expect(character.Head.face.Texture:match("209713952")).to.never.equal(nil)
+            expect(character.LeftUpperArm.TextureID:match("227710696")).to.never.equal(nil)
+            expect(character.LeftLowerArm.TextureID:match("227710696")).to.never.equal(nil)
+            expect(character.LeftHand.TextureID:match("227710696")).to.never.equal(nil)
+            expect(character.RightUpperArm.TextureID:match("227710696")).to.never.equal(nil)
+            expect(character.RightLowerArm.TextureID:match("227710696")).to.never.equal(nil)
+            expect(character.RightHand.TextureID:match("227710696")).to.never.equal(nil)
+            expect(character.UpperTorso.TextureID:match("227710696")).to.never.equal(nil)
+            expect(character.LowerTorso.TextureID:match("227710696")).to.never.equal(nil)
+            expect(character.LeftUpperLeg.TextureID:match("3925758521")).to.never.equal(nil)
+            expect(character.LeftLowerLeg.TextureID:match("3925758521")).to.never.equal(nil)
+            expect(character.LeftFoot.TextureID:match("3925758521")).to.never.equal(nil)
+            expect(character.RightUpperLeg.TextureID:match("3925758521")).to.never.equal(nil)
+            expect(character.RightLowerLeg.TextureID:match("3925758521")).to.never.equal(nil)
+            expect(character.RightFoot.TextureID:match("3925758521")).to.never.equal(nil)
+        end)
+
+        it("ApplyDescription() should apply R6 rig", function()
+            local character = l15.Character
+            local rigParts = {unpack(rawget(l15, "RigParts"))}
+            l15:ApplyDescription(testDescription, Enum.HumanoidRigType.R6)
+            for _,part in ipairs(rigParts) do
+                expect(part.Parent).to.equal(nil)
+            end
+            expect(character:FindFirstChild("Humanoid")).to.equal(nil)
+            expect(character:FindFirstChild("Animate")).to.equal(nil)
+            expect(character:FindFirstChild("Shirt")).to.equal(nil)
+            expect(character:FindFirstChild("Pants")).to.equal(nil)
+            expect(character:FindFirstChild("Body Colors")).to.equal(nil)
+            expect(character.Accessories:FindFirstChild("Black Bow"):IsA("Accessory")).to.equal(true)
+            expect(character.Accessories:FindFirstChild("Bun with Waves"):IsA("Accessory")).to.equal(true)
+            expect(character.Head.Color).to.equal(bodyColor)
+            expect(character["Left Arm"].Color).to.equal(bodyColor)
+            expect(character["Right Arm"].Color).to.equal(bodyColor)
+            expect(character["Left Leg"].Color).to.equal(bodyColor)
+            expect(character["Right Leg"].Color).to.equal(bodyColor)
+            expect(character["Torso"].Color).to.equal(bodyColor)
+            expect(character.Head.face.Texture:match("209713952")).to.never.equal(nil)
         end)
 
         it("BuildRigFromAttachments() should not error", function()

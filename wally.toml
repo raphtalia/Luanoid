@@ -4,7 +4,7 @@ license = "MIT"
 name = "raphtalia/luanoid"
 realm = "shared"
 registry = "https://github.com/UpliftGames/wally-index"
-version = "1.0.1"
+version = "1.1.0"
 
 [dependencies]
 EnumList = "sleitnick/enum-list@2.0.0"

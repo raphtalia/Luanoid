@@ -8,6 +8,8 @@ sidebar_position: 4
 
 The default way clothing is applied is by setting `MeshPart.TextureID` on body parts to the clothing's asset ID. This results in textures not supporting transparency and taking on the background color the of asset.
 
+Character rigs must also be UV-wrapped to support clothing. In the repository is a [Dogu15 rig UV-wrapped](https://github.com/raphtalia/Luanoid/blob/17f8acf15d01ccca7f94599d51ba26c613d9e587/assets/DoguXCV.rbxm) by [UnitingMatrixXCV](https://www.roblox.com/users/7855169/profile#!/about).
+
 <img src="/Luanoid/clothingSupportPBR.png" alt="Clothing with SurfaceAppearance" height="250"/>
 <img src="/Luanoid/clothingSupportNative.png" alt="Clothing with native support" height="250"/>
 

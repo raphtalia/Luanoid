@@ -90,14 +90,14 @@ end
 --[=[
     @within Animator
     @method LoadAnimation
-    @param animation Animation
     @param name string
+    @param animation Animation
     @return AnimationTrack
     Loads an animation into the Animator under a name that can be used to play
     it later.
 ]=]
-function ANIMATOR_METATABLE:LoadAnimation(animation, name)
-    t.LoadAnimation(animation, name)
+function ANIMATOR_METATABLE:LoadAnimation(name, animation)
+    t.LoadAnimation(name, animation)
     if not self.Luanoid.Character:IsDescendantOf(workspace) then
         error("LoadAnimation() can only be called while Luanoid is in the workspace", 2)
     end

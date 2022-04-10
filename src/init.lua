@@ -20,7 +20,7 @@ local Constants = require(script.Constants)
 local IS_SERVER = Constants.IS_SERVER
 local IS_CLIENT = Constants.IS_CLIENT
 
-local applyHumanoidDescription = require(script.Util.applyHumanoidDescription)
+local applyDescription = require(script.Util.applyDescription)
 local buildRigFromAttachments = require(script.Util.buildRigFromAttachments)
 
 -- local Terrain = workspace:FindFirstChildWhichIsA("Terrain")
@@ -546,6 +546,14 @@ function LUANOID_METATABLE:SetRig(rig)
     local rootPart = self.RootPart
     local rigParts = rawget(self, "RigParts")
     local motor6ds = rawget(self, "RigMotors6Ds")
+    local accessories = {}
+
+    for _,accessory in ipairs(rig:GetChildren()) do
+        if accessory:IsA("Accessory") then
+            table.insert(accessories, accessory)
+            accessory.Parent = nil
+        end
+    end
 
     for _,v in ipairs(rig:GetDescendants()) do
         if v.Parent.Name == "HumanoidRootPart" then
@@ -569,6 +577,10 @@ function LUANOID_METATABLE:SetRig(rig)
     rootPart.Size = rig.HumanoidRootPart.Size
     rig:Destroy()
 
+    for _,accessory in ipairs(accessories) do
+        self:AddAccessory(accessory)
+    end
+
     self.RigChanged:Fire(character)
 end
 
@@ -590,17 +602,18 @@ end
 
 --[=[
     @within Luanoid
-    @server
     @method ApplyDescription
     @param humanoidDescription HumanoidDescription
+    @param rigType HumanoidRigType
     Makes the character's look match that of the passed in HumanoidDescription.
+    If no `rigType` is provided a new rig will not be applied. Setting
+    `HumanoidDescription.Shirt` and `HumanoidDescription.Pants` to any negative
+    value will have it ignore the rig's current shirt and pants rather than
+    clearing them.
 ]=]
-function LUANOID_METATABLE:ApplyDescription(humanoidDescription)
-    t.ApplyDescription(humanoidDescription)
-    if IS_CLIENT then
-        error("ApplyDescription() is currently not implemented on the client", 2)
-    end
-    applyHumanoidDescription(self, humanoidDescription)
+function LUANOID_METATABLE:ApplyDescription(humanoidDescription, rigType)
+    t.ApplyDescription(humanoidDescription, rigType)
+    applyDescription(self, humanoidDescription, rigType)
 end
 
 --[=[
@@ -617,7 +630,8 @@ end
 --[=[
     @within Luanoid
     @method BuildRigFromAttachments
-    Assembles a tree of Motor6D joints by attaching together Attachment objects in a Luanoid's character.
+    Assembles a tree of Motor6D joints by attaching together Attachment objects
+    in a Luanoid's character.
 ]=]
 function LUANOID_METATABLE:BuildRigFromAttachments()
     buildRigFromAttachments(self.Character)
@@ -709,6 +723,9 @@ end
 ]=]
 function LUANOID_METATABLE:AddAccessory(accessory, base, pivot)
     t.AddAccessory(accessory, base, pivot)
+    if #rawget(self, "RigParts") == 0 then
+        error("Rig must be mounted first before adding accessories", 2)
+    end
     local character = self.Character
 
     local existingWeldConstraint = accessory:FindFirstChild("AccessoryWeldConstraint", true)

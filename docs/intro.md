@@ -23,9 +23,7 @@ Luanoid = "raphtalia/luanoid@^1"
 
 ## Usage
 
-Grab an R15 rig or the [UV-wrapped Dogu15 rig in the repository](https://github.com/raphtalia/Luanoid/blob/17f8acf15d01ccca7f94599d51ba26c613d9e587/assets/DoguXCV.rbxm)
-and place it in ReplicatedStorage. Then run the example below in a server script and it will create a Luanoid character
-and have it walk somewhere.
+The example below it will create a Luanoid character and have it walk somewhere.
 
 ```lua
 local Players = game:GetService("Players")
@@ -38,8 +36,7 @@ local l15 = Luanoid.new()
 l15:SetRig(ReplicatedStorage.DoguXCV:Clone())
 l15.Character.Parent = workspace
 
--- Currently ApplyDescription() only works while on the server and character is under Workspace
-l15:ApplyDescription(Players:GetHumanoidDescriptionFromUserId(72938051))
+l15:ApplyDescription(Players:GetHumanoidDescriptionFromUserId(72938051), Enum.HumanoidRigType.R15)
 l15.CharacterController:Start()
 
 -- MoveTo() returns a Promise
@@ -59,10 +56,10 @@ end
 
 |        Feature         |       Status       | Notes                                                                                                                                                        |
 | :--------------------: | :----------------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-|      Accessories       | :white_check_mark: | Can only be applied on the server                                                                                                                            |
-|        Packages        |     :warning:      | Can only be applied on the server, Anthro packages will not be skilled properly work due to the lack of a Humanoid                                           |
+|      Accessories       | :white_check_mark: |                                                                                                                                                              |
+|        Packages        |     :warning:      | Anthro packages will not be skilled properly work due to the lack of a Humanoid                                                                              |
 |        Clothing        |     :warning:      | See [Clothing Support](clothingSupport)                                                                                                                      |
-|       Animations       | :white_check_mark: | Must be loaded first on the server                                                                                                                           |
+|       Animations       | :white_check_mark: |                                                                                                                                                              |
 |        Swimming        |       :soon:       |                                                                                                                                                              |
 |        Climbing        |       :soon:       | Implementation will likely require climbable Instances to have a "Climbable" [tag](https://developer.roblox.com/en-us/api-reference/class/CollectionService) |
 |        Sitting         |       :soon:       |                                                                                                                                                              |
