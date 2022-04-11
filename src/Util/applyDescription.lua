@@ -100,4 +100,6 @@ return function(luanoid, humanoidDescription: HumanoidDescription, rigType: Enum
             end
         end
     end
+
+    rig:Destroy()
 end

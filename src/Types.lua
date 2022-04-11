@@ -150,6 +150,10 @@ return {
             assert(t.RaycastParams(v))
         end,
 
+        CanRedirectJump = function(v)
+            assert(t.boolean(v))
+        end,
+
         FiniteStateMachine = function(v)
             assert(t.callback(v))
         end,

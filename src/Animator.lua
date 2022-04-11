@@ -9,6 +9,9 @@ local t = require(script.Parent.Types).Animator
     CharacterController. Luanoids can accept different Animators by setting the
     `Animator` property on them.
 
+    Animations loaded on the server before the Client Luanoid is created will
+    automatically be replicated.
+
     See [Custom Animators](/docs/customAnimators) for writing your own
     Animator.
 ]=]
@@ -69,22 +72,53 @@ function Animator.new(luanoid)
         @prop AnimationUnloading Signal (animationTrack: AnimationTrack)
         Fires while `UnloadAnimation()` is executing.
     ]=]
-    local self = {
+    local self =  setmetatable({
         Luanoid = luanoid,
-        AnimationController = Instance.new("AnimationController"),
-        Animator = Instance.new("Animator"),
+        AnimationController = nil,
+        Animator = nil,
         AnimationTracks = {},
 
         AnimationPlayed = Signal.new(),
         AnimationStopped = Signal.new(),
         AnimationLoaded = Signal.new(),
         AnimationUnloading = Signal.new(),
-    }
+    }, ANIMATOR_METATABLE)
+    local character = luanoid.Character
 
-    self.AnimationController.Parent = self.Luanoid.Character
-    self.Animator.Parent = self.AnimationController
+    if character:FindFirstChild("AnimationController") then
+        self.AnimationController = character.AnimationController
+        local animator = character.AnimationController.Animator
+        self.Animator = animator
 
-    return setmetatable(self, ANIMATOR_METATABLE)
+        -- TODO: Figure out how to replicate newly created server animations after Client Luanoid is created
+        for _,animation in ipairs(animator:GetChildren()) do
+            self:_loadAnimation(animation)
+        end
+    else
+        local animationController = Instance.new("AnimationController")
+        local animator = Instance.new("Animator")
+        animationController.Parent = character
+        animator.Parent = animationController
+        self.AnimationController = animationController
+        self.Animator = animator
+    end
+
+    return self
+end
+
+--[=[
+    @within Animator
+    @private
+    @method _loadAnimation
+    @param animation Animation
+    @return AnimationTrack
+]=]
+function ANIMATOR_METATABLE:_loadAnimation(animation)
+    local name = animation.name
+    local animationTrack = self.Animator:LoadAnimation(animation)
+    self.AnimationTracks[name] = animationTrack
+    self.AnimationLoaded:Fire(name, animationTrack)
+    return animationTrack
 end
 
 --[=[
@@ -97,16 +131,23 @@ end
     it later.
 ]=]
 function ANIMATOR_METATABLE:LoadAnimation(name, animation)
+    -- TODO: Possibly convert this to a Promise to allow loading animations outside of Workspace and resolve with the AnimationTrack later
     t.LoadAnimation(name, animation)
     if not self.Luanoid.Character:IsDescendantOf(workspace) then
         error("LoadAnimation() can only be called while Luanoid is in the workspace", 2)
     end
 
-    local animationTrack = self.Animator:LoadAnimation(animation)
-    self.AnimationTracks[name] = animationTrack
-    self.AnimationLoaded:Fire(name, animationTrack)
+    local existingAnimation = self.Animator:FindFirstChild(name)
+    if existingAnimation then
+        existingAnimation:Destroy()
+    end
 
-    return animationTrack
+    -- Replication of animations from Server to Client
+    animation = animation:Clone()
+    animation.Name = name
+    animation.Parent = self.Animator
+
+    return self:_loadAnimation(animation)
 end
 
 --[=[
@@ -180,6 +221,11 @@ function ANIMATOR_METATABLE:UnloadAnimation(name)
         self.AnimationUnloading:Fire(name, animationTrack)
         animationTrack:Destroy()
         self.AnimationTracks[name] = nil
+
+        local animation = self.Animator:FindFirstChild(name)
+        if animation then
+            animation:Destroy()
+        end
     else
         warn("AnimationTrack not found: "..name)
     end

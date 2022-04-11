@@ -37,6 +37,14 @@ function CHARACTER_CONTROLLER_METATABLE:__index(i)
             RaycastParams used to cast to the ground underneath the Luanoid's character.
         ]=]
         return rawget(self, "_raycastParams")
+    elseif i == "CanRedirectJump" then
+        --[=[
+            @within CharacterController
+            @prop CanRedirectJump boolean
+            Whether or not the Luanoid can "walk" when jumping. Default is
+            `true` to behave more like Humanoids.
+        ]=]
+        return rawget(self, "_canRedirectJump")
     elseif i == "Running" then
         --[=[
             @within CharacterController
@@ -120,6 +128,9 @@ function CHARACTER_CONTROLLER_METATABLE:__newindex(i, v)
     if i == "RaycastParams" then
         t.RaycastParams(v)
         rawset(self, "_raycastParams", v)
+    elseif i == "CanRedirectJump" then
+        t.CanRedirectJump(v)
+        rawset(self, "_canRedirectJump", v)
     elseif i == "FiniteStateMachine" then
         t.FiniteStateMachine(v)
         rawset(self, "_finiteStateMachine", v)
@@ -148,6 +159,7 @@ function CharacterController.new(luanoid, states, fsm)
     local self = {
         _luanoid = luanoid,
         _raycastParams = raycastParams,
+        _canRedirectJump = true,
         _finiteStateMachine = fsm,
         _running = false,
         _heartbeat = nil,

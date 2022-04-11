@@ -1,0 +1,32 @@
+{
+  "name": "Luanoid - Client Side Characters Example",
+  "tree": {
+    "$className": "DataModel",
+
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+
+      "Packages": {
+        "$path": "Packages",
+        "Luanoid": { "$path": "." },
+        "PlayerModule": { "$path": "example/PlayerModule" }
+      }
+    },
+
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+
+      "LuanoidServer": { "$path": "example/clientSideCharacters/LuanoidServer.server.lua" }
+    },
+
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+
+      "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
+
+        "LuanoidClient": { "$path": "example/clientSideCharacters/LuanoidClient.client.lua" }
+      }
+    }
+  }
+}

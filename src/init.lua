@@ -11,9 +11,8 @@ local FSM = require(script.FSM)
 
 local StateHandlers = {
     Dead = require(script.StateHandlers.Dead),
-    FallingAndPhysics = require(script.StateHandlers.FallingAndPhysics),
-    IdlingAndWalking = require(script.StateHandlers.IdlingAndWalking),
-    Jumping = require(script.StateHandlers.Jumping),
+    FallingPhysics = require(script.StateHandlers.FallingPhysics),
+    IdlingWalkingJumping = require(script.StateHandlers.IdlingWalkingJumping),
 }
 
 local Constants = require(script.Constants)
@@ -23,7 +22,6 @@ local IS_CLIENT = Constants.IS_CLIENT
 local applyDescription = require(script.Util.applyDescription)
 local buildRigFromAttachments = require(script.Util.buildRigFromAttachments)
 
--- local Terrain = workspace:FindFirstChildWhichIsA("Terrain")
 local LocalPlayer = Players.LocalPlayer
 local CurrentCamera = workspace.CurrentCamera
 
@@ -39,7 +37,14 @@ local Luanoid = {
 }
 local LUANOID_METATABLE = {}
 function LUANOID_METATABLE:__index(i)
-    if i == "MoveDirection" then
+    if i == "Name" then
+        --[=[
+            @within Luanoid
+            @prop Name string
+            A non-unique identifier of the Luanoid
+        ]=]
+        return self.Character.Name
+    elseif i == "MoveDirection" then
         --[=[
             @within Luanoid
             @prop MoveDirection Vector3
@@ -394,7 +399,7 @@ function Luanoid.new(existingCharacter)
         RigMotors6Ds = {},
         MoveToPromise = nil,
 
-        _character = Instance.new("Model"),
+        _character = existingCharacter or Instance.new("Model"),
         _floor = nil,
         _characterState = CharacterState.Idling,
         _animator = nil,
@@ -425,61 +430,59 @@ function Luanoid.new(existingCharacter)
     character:SetAttribute("AutoRotate", true)
     character:SetAttribute("Jump", false)
 
-    local moveDirAttachment = Instance.new("Attachment")
-    moveDirAttachment.Name = "MoveDirection"
+    if not existingCharacter then
+        local moveDirAttachment = Instance.new("Attachment")
+        moveDirAttachment.Name = "MoveDirection"
 
-    -- local lookDirAttachment = Instance.new("Attachment")
-    -- lookDirAttachment.Name = "LookDirection"
+        local humanoidRootPart = Instance.new("Part")
+        humanoidRootPart.Name = "HumanoidRootPart"
+        humanoidRootPart.Transparency = 1
+        humanoidRootPart.Size = Vector3.new(1, 1, 1)
+        humanoidRootPart.RootPriority = 127
+        humanoidRootPart.Parent = character
 
-    local humanoidRootPart = Instance.new("Part")
-    humanoidRootPart.Name = "HumanoidRootPart"
-    humanoidRootPart.Transparency = 1
-    humanoidRootPart.Size = Vector3.new(1, 1, 1)
-    humanoidRootPart.RootPriority = 127
-    humanoidRootPart.Parent = character
+        local mover = Instance.new("VectorForce")
+        mover.Name = "Mover"
+        mover.RelativeTo = Enum.ActuatorRelativeTo.World
+        mover.ApplyAtCenterOfMass = true
+        mover.Attachment0 = moveDirAttachment
+        mover.Force = Vector3.new()
+        mover.Parent = humanoidRootPart
 
-    local mover = Instance.new("VectorForce")
-    mover.Name = "Mover"
-    mover.RelativeTo = Enum.ActuatorRelativeTo.World
-    mover.ApplyAtCenterOfMass = true
-    mover.Attachment0 = moveDirAttachment
-    mover.Force = Vector3.new()
-    mover.Parent = humanoidRootPart
+        local aligner = Instance.new("AlignOrientation")
+        aligner.Name = "Aligner"
+        aligner.Mode = Enum.OrientationAlignmentMode.OneAttachment
+        aligner.Responsiveness = 20
+        aligner.Attachment0 = moveDirAttachment
+        aligner.Parent = humanoidRootPart
 
-    local aligner = Instance.new("AlignOrientation")
-    aligner.Name = "Aligner"
-    aligner.Mode = Enum.OrientationAlignmentMode.OneAttachment
-    aligner.Responsiveness = 20
-    aligner.Attachment0 = moveDirAttachment
-    -- aligner.Attachment1 = lookDirAttachment
-    aligner.Parent = humanoidRootPart
+        moveDirAttachment.Parent = humanoidRootPart
 
-    moveDirAttachment.Parent = humanoidRootPart
-    -- lookDirAttachment.Parent = Terrain
+        local accessoriesFolder = Instance.new("Folder")
+        accessoriesFolder.Name = "Accessories"
+        accessoriesFolder.Parent = character
 
-    local accessoriesFolder = Instance.new("Folder")
-    accessoriesFolder.Name = "Accessories"
-    accessoriesFolder.Parent = character
+        self.Name = "Luanoid"
+    end
 
-    self.Name = "Luanoid"
     self.Animator = Animator.new(self)
 
     local characterController = CharacterController.new(self, CharacterState, FSM)
-    characterController.States[CharacterState.Physics].Entered:Connect(StateHandlers.FallingAndPhysics.entered)
-    characterController.States[CharacterState.Physics].Leaving:Connect(StateHandlers.FallingAndPhysics.leaving)
-    characterController.States[CharacterState.Physics].Step:Connect(StateHandlers.FallingAndPhysics.step)
-    characterController.States[CharacterState.Idling].Entered:Connect(StateHandlers.IdlingAndWalking.entered)
-    characterController.States[CharacterState.Idling].Leaving:Connect(StateHandlers.IdlingAndWalking.leaving)
-    characterController.States[CharacterState.Idling].Step:Connect(StateHandlers.IdlingAndWalking.step)
-    characterController.States[CharacterState.Walking].Entered:Connect(StateHandlers.IdlingAndWalking.entered)
-    characterController.States[CharacterState.Walking].Leaving:Connect(StateHandlers.IdlingAndWalking.leaving)
-    characterController.States[CharacterState.Walking].Step:Connect(StateHandlers.IdlingAndWalking.step)
-    characterController.States[CharacterState.Jumping].Entered:Connect(StateHandlers.Jumping.entered)
-    characterController.States[CharacterState.Jumping].Leaving:Connect(StateHandlers.Jumping.leaving)
-    characterController.States[CharacterState.Jumping].Step:Connect(StateHandlers.Jumping.step)
-    characterController.States[CharacterState.Falling].Entered:Connect(StateHandlers.FallingAndPhysics.entered)
-    characterController.States[CharacterState.Falling].Leaving:Connect(StateHandlers.FallingAndPhysics.leaving)
-    characterController.States[CharacterState.Falling].Step:Connect(StateHandlers.FallingAndPhysics.step)
+    characterController.States[CharacterState.Physics].Entered:Connect(StateHandlers.FallingPhysics.entered)
+    characterController.States[CharacterState.Physics].Leaving:Connect(StateHandlers.FallingPhysics.leaving)
+    characterController.States[CharacterState.Physics].Step:Connect(StateHandlers.FallingPhysics.step)
+    characterController.States[CharacterState.Idling].Entered:Connect(StateHandlers.IdlingWalkingJumping.entered)
+    characterController.States[CharacterState.Idling].Leaving:Connect(StateHandlers.IdlingWalkingJumping.leaving)
+    characterController.States[CharacterState.Idling].Step:Connect(StateHandlers.IdlingWalkingJumping.step)
+    characterController.States[CharacterState.Walking].Entered:Connect(StateHandlers.IdlingWalkingJumping.entered)
+    characterController.States[CharacterState.Walking].Leaving:Connect(StateHandlers.IdlingWalkingJumping.leaving)
+    characterController.States[CharacterState.Walking].Step:Connect(StateHandlers.IdlingWalkingJumping.step)
+    characterController.States[CharacterState.Jumping].Entered:Connect(StateHandlers.IdlingWalkingJumping.entered)
+    characterController.States[CharacterState.Jumping].Leaving:Connect(StateHandlers.IdlingWalkingJumping.leaving)
+    characterController.States[CharacterState.Jumping].Step:Connect(StateHandlers.IdlingWalkingJumping.step)
+    characterController.States[CharacterState.Falling].Entered:Connect(StateHandlers.FallingPhysics.entered)
+    characterController.States[CharacterState.Falling].Leaving:Connect(StateHandlers.FallingPhysics.leaving)
+    characterController.States[CharacterState.Falling].Step:Connect(StateHandlers.FallingPhysics.step)
     characterController.States[CharacterState.Dead].Entered:Connect(StateHandlers.Dead.entered)
     characterController.States[CharacterState.Dead].Leaving:Connect(StateHandlers.Dead.leaving)
     characterController.States[CharacterState.Dead].Step:Connect(StateHandlers.Dead.step)

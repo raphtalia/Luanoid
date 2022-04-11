@@ -28,7 +28,8 @@ return function (characterController)
             else
                 if raycastResult and (rootPart.Position - raycastResult.Position).Magnitude < groundDistanceGoal then
                     -- We are grounded
-                    if luanoid.Jump then
+                    if luanoid.Jump and characterController:GetStateElapsedTime() > 0.2 then
+                        -- Jump has a cooldown after hitting the ground
                         newState = CharacterState.Jumping
                     else
                         local moveDir = luanoid.MoveDirection
