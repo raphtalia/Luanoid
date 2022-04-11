@@ -4,11 +4,13 @@ sidebar_position: 1
 
 # Getting Started
 
-Luanoids are an alternative to Roblox Humanoids originally written by [LPGhatguy](https://github.com/LPGhatguy) as a [2018 Hack Week project](https://github.com/LPGhatguy/luanoid).
+Luanoids are an alternative to Roblox Humanoids originally written by [LPGhatguy](https://github.com/LPGhatguy) as a
+[2018 Hack Week project](https://github.com/LPGhatguy/luanoid).
 
 ## Installation
 
-Luanoid can be installed with [Wally](https://wally.run) by adding it to the `[dependencies]` section of your `wally.toml` file.
+Luanoid can be installed with [Wally](https://wally.run) by adding it to the `[dependencies]` section of your
+`wally.toml` file.
 
 ```toml
 [package]
@@ -46,6 +48,15 @@ else
     print("failed to reach target :(")
 end
 ```
+
+In the top-level [examples](https://github.com/raphtalia/Luanoid/tree/69a7b165676599fd2bcc132ee999a686a9eefbf5/examples)
+directory there are binaries and source-code for for examples with
+[server-side characters](https://github.com/raphtalia/Luanoid/tree/69a7b165676599fd2bcc132ee999a686a9eefbf5/examples/serverSideCharacters)
+which is the same behavior as normal Roblox characters. Then there is an example of
+[client-side characters](https://github.com/raphtalia/Luanoid/tree/69a7b165676599fd2bcc132ee999a686a9eefbf5/examples/clientSideCharacters)
+where on the server each character is represented only as a HumanoidRootPart and the client applies the rig and
+cosmetics. The source-code is reliant on a character model that cannot be synced with Rojo so for quick access you can
+download the binaries, or download the character model from the assets directory and place it in ReplicatedStorage.
 
 ## Limitations
 
