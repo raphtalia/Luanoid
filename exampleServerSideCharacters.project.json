@@ -9,14 +9,14 @@
       "Packages": {
         "$path": "Packages",
         "Luanoid": { "$path": "." },
-        "PlayerModule": { "$path": "example/PlayerModule" }
+        "PlayerModule": { "$path": "examples/PlayerModule" }
       }
     },
 
     "ServerScriptService": {
       "$className": "ServerScriptService",
 
-      "LuanoidServer": { "$path": "example/serverSideCharacters/LuanoidServer.server.lua" }
+      "LuanoidServer": { "$path": "examples/serverSideCharacters/LuanoidServer.server.lua" }
     },
 
     "StarterPlayer": {
@@ -25,7 +25,7 @@
       "StarterPlayerScripts": {
         "$className": "StarterPlayerScripts",
 
-        "LuanoidClient": { "$path": "example/serverSideCharacters/LuanoidClient.client.lua" }
+        "LuanoidClient": { "$path": "examples/serverSideCharacters/LuanoidClient.client.lua" }
       }
     }
   }
