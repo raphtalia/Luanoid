@@ -4,7 +4,7 @@ license = "MIT"
 name = "raphtalia/luanoid"
 realm = "shared"
 registry = "https://github.com/UpliftGames/wally-index"
-version = "1.2.0"
+version = "1.2.1"
 
 [dependencies]
 EnumList = "sleitnick/enum-list@2.0.0"
@@ -12,5 +12,5 @@ Promise = "evaera/promise@3.2.1"
 Signal = "sleitnick/signal@1.1.0"
 t = "osyrisrblx/t@3.0.0"
 
-[dev-dependencies]
-TestEZ = "roblox/testez@0.4.1"
+# [dev-dependencies]
+# TestEZ = "roblox/testez@0.4.1"
