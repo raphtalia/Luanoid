@@ -1,8 +1,7 @@
 local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Promise = require(ReplicatedStorage.Packages.Promise)
-local Signal = require(ReplicatedStorage.Packages.Signal)
+local Promise = require(script.Parent.Promise)
+local Signal = require(script.Parent.Signal)
 local t = require(script.Types).Luanoid
 local Animator = require(script.Animator)
 local CharacterController = require(script.CharacterController)

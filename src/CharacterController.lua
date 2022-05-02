@@ -1,7 +1,6 @@
 local RunService = game:GetService("RunService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Signal = require(ReplicatedStorage.Packages.Signal)
+local Signal = require(script.Parent.Parent.Signal)
 
 local t = require(script.Parent.Types).CharacterController
 

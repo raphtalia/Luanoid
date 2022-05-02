@@ -1,4 +1,4 @@
-local Signal = require(game:GetService("ReplicatedStorage").Packages.Signal)
+local Signal = require(script.Parent.Parent.Signal)
 
 local t = require(script.Parent.Types).Animator
 

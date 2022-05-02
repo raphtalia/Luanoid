@@ -1,4 +1,4 @@
-local t = require(game:GetService("ReplicatedStorage").Packages.t)
+local t = require(script.Parent.Parent.t)
 
 local CustomAccessory = t.union(t.instanceIsA("Accessory"), t.instanceIsA("Model"), t.instanceIsA("BasePart"))
 return {

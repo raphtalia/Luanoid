@@ -25,7 +25,7 @@
     @within CharacterState
     @prop Dead EnumItem
 ]=]
-return require(game:GetService("ReplicatedStorage").Packages.EnumList).new("CharacterState", {
+return require(script.Parent.Parent.EnumList).new("CharacterState", {
     "Physics",
     "Idling",
     "Walking",
