@@ -1,0 +1,50 @@
+{
+	"name": "@rbxts/luanoid",
+	"version": "1.2.1",
+	"description": "TypeScript support for Luanoid",
+	"main": "src/init.lua",
+	"typings": "src/index.d.ts",
+	"scripts": {
+		"eslint": "eslint \"src/**/*.ts\" --max-warnings 0",
+		"eslint-fix": "eslint \"src/**/*.ts\" --fix"
+	},
+	"keywords": [
+		"roblox",
+		"typescript",
+		"luanoid"
+	],
+	"contributors": [
+		{
+			"name": "raphtalia",
+			"url": "https://github.com/raphtalia"
+		}
+	],
+	"author": "raphtalia",
+	"license": "MIT",
+	"devDependencies": {
+		"@rbxts/compiler-types": "^1.2.3-types.0",
+		"@rbxts/types": "^1.0.519",
+		"@typescript-eslint/eslint-plugin": "^4.29.2",
+		"@typescript-eslint/parser": "^4.29.2",
+		"eslint": "^7.32.0",
+		"eslint-config-prettier": "^6.15.0",
+		"eslint-plugin-prettier": "^3.4.0",
+		"eslint-plugin-roblox-ts": "^0.0.8",
+		"eslint-plugin-simple-import-sort": "^7.0.0",
+		"prettier": "^2.3.1",
+		"typescript": "^4.3.4"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/raphtalia/Luanoid"
+	},
+	"directories": {
+		"lib": "src"
+	},
+	"files": [
+		"src"
+	]
+}

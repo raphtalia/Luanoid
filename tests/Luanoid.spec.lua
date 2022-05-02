@@ -144,6 +144,7 @@ return function()
             repeat
                 task.wait()
             until l15.Floor
+            task.wait(0.5) -- Wait for jump cooldown to expire
             l15.Jump = true
             task.wait()
             expect(fired).to.equal(true)

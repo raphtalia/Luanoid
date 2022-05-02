@@ -1,1 +1,1 @@
-require(game:GetService("ReplicatedStorage").DevPackages.TestEZ).TestBootstrap:run({ script })
+require(game:GetService("ReplicatedStorage").Packages.TestEZ).TestBootstrap:run({ script })

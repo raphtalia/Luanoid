@@ -1,23 +1,21 @@
 {
-  "name": "Luanoid - Dev",
-  "tree": {
-    "$className": "DataModel",
+	"name": "Luanoid - Dev",
+	"tree": {
+		"$className": "DataModel",
 
-    "ReplicatedStorage": {
-      "$className": "ReplicatedStorage",
+		"ReplicatedStorage": {
+			"$className": "ReplicatedStorage",
 
-      "Packages": {
-        "$path": "Packages",
-        "Luanoid": { "$path": "." }
-      },
+			"Packages": {
+				"$path": "Packages",
+				"Luanoid": { "$path": "." }
+			}
+		},
 
-      "DevPackages": { "$path": "DevPackages" }
-    },
+		"ServerScriptService": {
+			"$className": "ServerScriptService",
 
-    "ServerScriptService": {
-      "$className": "ServerScriptService",
-
-      "tests": { "$path": "tests" }
-    }
-  }
+			"tests": { "$path": "tests" }
+		}
+	}
 }

@@ -21,6 +21,7 @@ local IS_CLIENT = Constants.IS_CLIENT
 
 local applyDescription = require(script.Util.applyDescription)
 local buildRigFromAttachments = require(script.Util.buildRigFromAttachments)
+local fixSuperclass = require(script.Util.fixSuperclass)
 
 local LocalPlayer = Players.LocalPlayer
 local CurrentCamera = workspace.CurrentCamera
@@ -366,15 +367,11 @@ function LUANOID_METATABLE:__newindex(i, v)
     end
 end
 
---[=[
-    @within Luanoid
-    Creates a new Luanoid.
-
-    @param existingCharacter Model
-    @return Luanoid
-]=]
-function Luanoid.new(existingCharacter)
+function Luanoid:constructor(existingCharacter)
+    -- roblox-ts compatibility
     t.new(existingCharacter)
+
+    fixSuperclass(self, Luanoid, LUANOID_METATABLE)
 
     --[=[
         @within Luanoid
@@ -382,42 +379,40 @@ function Luanoid.new(existingCharacter)
         @prop RigParts {BasePart}
         List of parts in the current rig.
     ]=]
+    rawset(self, "RigParts", {})
     --[=[
         @within Luanoid
         @private
         @prop RigMotors6Ds {Motor6D}
         List of motors in the current rig.
     ]=]
+    rawset(self, "RigMotors6Ds", {})
     --[=[
         @within Luanoid
         @private
         @prop MoveToPromise Promise<boolean>
         Promise for the current MoveTo operation.
     ]=]
-    local self = setmetatable({
-        RigParts = {},
-        RigMotors6Ds = {},
-        MoveToPromise = nil,
+    -- rawset(self, "MoveToPromise", nil)
+    rawset(self, "_character", existingCharacter or Instance.new("Model"))
+    -- rawset(self, "_floor", nil)
+    rawset(self, "_characterState", CharacterState.Idling)
+    -- rawset(self, "_animator", nil)
+    -- rawset(self, "_characterController", nil)
 
-        _character = existingCharacter or Instance.new("Model"),
-        _floor = nil,
-        _characterState = CharacterState.Idling,
-        _animator = nil,
-        _characterController = nil,
+    rawset(self, "_rigChanged", Signal.new())
+    rawset(self, "_accessoryAdded", Signal.new())
+    rawset(self, "_accessoryRemoving", Signal.new())
+    rawset(self, "_died", Signal.new())
+    rawset(self, "_freeFalling", Signal.new())
+    rawset(self, "_healthChanged", Signal.new())
+    rawset(self, "_jumping", Signal.new())
+    rawset(self, "_moveToFinished", Signal.new())
+    rawset(self, "_seated", Signal.new()) -- TODO: Implement
+    rawset(self, "_stateChanged", Signal.new())
+    rawset(self, "_touched", Signal.new()) -- TODO: Implement
+    rawset(self, "_destroying", Signal.new())
 
-        _rigChanged = Signal.new(),
-        _accessoryAdded = Signal.new(),
-        _accessoryRemoving = Signal.new(),
-        _died = Signal.new(),
-        _freeFalling = Signal.new(),
-        _healthChanged = Signal.new(),
-        _jumping = Signal.new(),
-        _moveToFinished = Signal.new(),
-        _seated = Signal.new(), -- TODO: Implement
-        _stateChanged = Signal.new(),
-        _touched = Signal.new(), -- TODO: Implement
-        _destroying = Signal.new(),
-    }, LUANOID_METATABLE)
     local character = self.Character
     character:SetAttribute("MoveDirection", Vector3.new())
     character:SetAttribute("LookDirection", Vector3.new())
@@ -519,6 +514,18 @@ function Luanoid.new(existingCharacter)
     character:GetAttributeChangedSignal("Health"):Connect(function()
         self.HealthChanged:Fire(character:GetAttribute("Health"))
     end)
+end
+
+--[=[
+    @within Luanoid
+    Creates a new Luanoid.
+
+    @param existingCharacter Model
+    @return Luanoid
+]=]
+function Luanoid.new(existingCharacter)
+    local self = setmetatable({}, LUANOID_METATABLE)
+    Luanoid.constructor(self, existingCharacter)
 
     return self
 end
@@ -899,4 +906,6 @@ function LUANOID_METATABLE:ChangeState(newState)
     end
 end
 
+-- roblox-ts compatability
+Luanoid.default = Luanoid
 return Luanoid
