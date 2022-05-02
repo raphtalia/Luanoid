@@ -1,12 +1,12 @@
 {
-	"name": "@raphtalia/luanoid",
-	"version": "1.3.0",
+	"name": "@rbxts/luanoid",
+	"version": "1.3.1",
 	"description": "TypeScript support for Luanoid",
-	"main": "src/init.lua",
-	"typings": "src/index.d.ts",
+	"main": "types/init.lua",
+	"typings": "types/index.d.ts",
 	"scripts": {
-		"eslint": "eslint \"src/**/*.ts\" --max-warnings 0",
-		"eslint-fix": "eslint \"src/**/*.ts\" --fix"
+		"eslint": "eslint \"types/**/*.ts\" --max-warnings 0",
+		"eslint-fix": "eslint \"types/**/*.ts\" --fix"
 	},
 	"keywords": [
 		"roblox",
@@ -42,9 +42,9 @@
 		"url": "https://github.com/raphtalia/Luanoid"
 	},
 	"directories": {
-		"lib": "src"
+		"lib": "types"
 	},
 	"files": [
-		"src"
+		"types"
 	]
 }
