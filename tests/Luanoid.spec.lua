@@ -8,6 +8,7 @@ return function()
         beforeEach(function()
             l15 = Luanoid.new()
             l15.Character.Parent = workspace
+            l15.RootPart.CFrame = CFrame.new(0, 5, 0)
             l15:ApplyDescription(Instance.new("HumanoidDescription"), Enum.HumanoidRigType.R15)
             l15.CharacterController:Start()
         end)

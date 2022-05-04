@@ -496,17 +496,10 @@ function Luanoid:constructor(existingCharacter)
         self:SetNetworkOwner(localNetworkOwner)
     end
 
+    -- TODO: Replace when Destroying is enabled
     character.AncestryChanged:Connect(function()
         if not character:IsDescendantOf(game.Workspace) then
-            if self.RootPart.Parent == character then
-                self.CharacterController:Stop()
-            else
-                --[[
-                    We don't pause the simulation to allow the Dead
-                    CharacterState handler to run.
-                ]]
-                self:ChangeState(CharacterState.Dead)
-            end
+            self.CharacterController:Stop()
         end
     end)
 
