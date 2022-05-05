@@ -4,17 +4,33 @@ local Luanoid = require(ReplicatedStorage.Packages.Luanoid)
 return function()
     describe("Luanoid", function()
         local l15
+        local sl = workspace:WaitForChild("SpawnLocation")
+        local bp = workspace:WaitForChild("Baseplate")
+
+        local function resetL15pos()
+            l15.RootPart.CFrame = CFrame.new(0, 5, 0)
+        end
+
+        local function waitForFloor()
+            repeat
+                task.wait()
+            until l15.Floor
+        end
 
         beforeEach(function()
             l15 = Luanoid.new()
             l15.Character.Parent = workspace
-            l15.RootPart.CFrame = CFrame.new(0, 5, 0)
+            resetL15pos()
             l15:ApplyDescription(Instance.new("HumanoidDescription"), Enum.HumanoidRigType.R15)
             l15.CharacterController:Start()
         end)
 
         afterEach(function()
             l15:Destroy()
+            sl.Material = Enum.Material.Plastic
+            sl.CanCollide = true
+            -- bp.Material = Enum.Material.Plastic
+            -- bp.CanCollide = true
         end)
 
         it("should update MoveDirection attribute", function()
@@ -77,15 +93,26 @@ return function()
         end)
 
         it("should update Floor", function()
-            repeat
-                task.wait()
-            until l15.Floor
+            waitForFloor()
 
-            local sl = workspace.SpawnLocation
             expect(l15.Floor).to.equal(sl)
             expect(l15.FloorMaterial).to.equal(sl.Material)
             sl.Material = Enum.Material.Concrete
             expect(l15.FloorMaterial).to.equal(sl.Material)
+        end)
+
+        it("should respect collision", function()
+            -- ignores floor without collision
+            sl.CanCollide = false
+            resetL15pos()
+            waitForFloor()
+            expect(l15.Floor).to.equal(bp)
+
+            -- detects floor previously without collision
+            sl.CanCollide = true
+            resetL15pos()
+            waitForFloor()
+            expect(l15.Floor).to.equal(sl)
         end)
 
         -- TODO: Test rig mounting and accessories
@@ -142,9 +169,7 @@ return function()
                 fired = true
             end)
 
-            repeat
-                task.wait()
-            until l15.Floor
+            waitForFloor()
             task.wait(0.5) -- Wait for jump cooldown to expire
             l15.Jump = true
             task.wait()
