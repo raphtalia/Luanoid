@@ -234,6 +234,10 @@ end
     Starts the CharacterController's simulation.
 ]=]
 function CHARACTER_CONTROLLER_METATABLE:Start()
+    if not self.Luanoid.Character:IsDescendantOf(workspace) then
+        error("Start() can only be called while Luanoid is in the workspace", 2)
+    end
+
     local heartbeat = rawget(self, "_heartbeat")
     if not heartbeat or (heartbeat and not heartbeat.Connected) then
         -- Fire the entered event to run any setup code for the initial state
