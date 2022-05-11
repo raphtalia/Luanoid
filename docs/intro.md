@@ -68,7 +68,7 @@ download the binaries, or download the character model from the assets directory
 |        Feature         |       Status       | Notes                                                                                                                                                        |
 | :--------------------: | :----------------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 |      Accessories       | :white_check_mark: |                                                                                                                                                              |
-|        Packages        |     :warning:      | Anthro packages will not be skilled properly work due to the lack of a Humanoid                                                                              |
+|        Packages        |     :warning:      | Anthro packages will not be skinned properly work due to the lack of a Humanoid                                                                              |
 |        Clothing        |     :warning:      | See [Clothing Support](clothingSupport)                                                                                                                      |
 |       Animations       | :white_check_mark: |                                                                                                                                                              |
 |        Swimming        |       :soon:       |                                                                                                                                                              |
