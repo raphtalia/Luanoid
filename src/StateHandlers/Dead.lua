@@ -4,7 +4,7 @@ function Dead.entered(characterController)
     local luanoid = characterController.Luanoid
     luanoid.Died:Fire(true)
     -- luanoid.Animator:StopAnimations()
-    characterController:Stop()
+    -- characterController:Stop()
 end
 
 function Dead.leaving(characterController)
