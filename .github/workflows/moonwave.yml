@@ -1,0 +1,27 @@
+name: Moonwave
+
+on:
+    push:
+        # branches:
+        #   - main
+        paths: # Paths not listed, this workflow will have to be manually started
+            - ".github/workflows/moonwave.yml"
+            - ".moonwave/**"
+            - "src/**"
+            - "moonwave.toml"
+    workflow_dispatch:
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v2
+
+            - uses: actions/setup-node@v2
+              with:
+                  node-version: "18.x"
+
+            - run: |
+                  npm install
+                  npm run deploy:docs
