@@ -13,6 +13,7 @@ return {
 
         LookDirection = function(v)
             assert(t.Vector3(v))
+            assert(v.Magnitude > 0, "LookDirection magnitude must be non-zero value")
         end,
 
         Health = function(v)
@@ -94,6 +95,7 @@ return {
 
         Move = function(moveDirection, relativeToCamera)
             assert(t.tuple(t.Vector3, t.optional(t.boolean))(moveDirection, relativeToCamera))
+            assert(moveDirection.Magnitude > 0, "MoveDirection magnitude must be non-zero value")
         end,
 
         MoveTo = function(location, part, targetRadius, timeout)
@@ -156,6 +158,11 @@ return {
 
         FiniteStateMachine = function(v)
             assert(t.callback(v))
+        end,
+
+        UpDirection = function(v)
+            assert(t.Vector3(v))
+            assert(v.Magnitude > 0, "UpDirection magnitude must be non-zero value")
         end,
 
         new = function(luanoid, states, logic)

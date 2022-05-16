@@ -58,7 +58,9 @@ function IdlingWalkingJumping.step(characterController, dt)
     local aligner = luanoid.Aligner
     local curState = luanoid:GetState()
     local isJumping = curState == CharacterState.Jumping
+    local upDir = characterController.UpDirection
 
+    -- Inverting the X just works
     local lookDir = luanoid.LookDirection
     lookDir = Vector3.new(-lookDir.X, 0, lookDir.Z)
 
@@ -144,17 +146,14 @@ function IdlingWalkingJumping.step(characterController, dt)
 
         mover.Enabled = true
         aligner.Enabled = true
-        mover.Force = Vector3.new(aX, if isJumping then 0 else aUp, aZ) * rootPart.AssemblyMass
+        mover.Force = characterController:GetGravityForce() + Vector3.new(aX, if isJumping then 0 else aUp, aZ) * rootPart.AssemblyMass
 
         -- Look direction stuff
-        if moveDir.Magnitude > 0 and luanoid.AutoRotate then
+        if luanoid.AutoRotate and moveDir.Magnitude > 0 then
             luanoid.LookDirection = moveDir
         end
 
-        if lookDir.Magnitude > 0 then
-            -- Inverting the X just works
-            aligner.Attachment0.CFrame = CFrame.lookAt(Vector3.new(), lookDir)
-        end
+        aligner.Attachment0.CFrame = CFrame.lookAt(Vector3.new(), lookDir, upDir)
 
         if curState == CharacterState.Walking then
             local animationTrack = luanoid.Animator.AnimationTracks.Walking
@@ -166,9 +165,7 @@ function IdlingWalkingJumping.step(characterController, dt)
         mover.Enabled = false
         aligner.Enabled = true
 
-        if lookDir.Magnitude > 0 then
-            aligner.Attachment0.CFrame = CFrame.lookAt(Vector3.new(), lookDir)
-        end
+        aligner.Attachment0.CFrame = CFrame.lookAt(Vector3.new(), lookDir, upDir)
     end
 end
 

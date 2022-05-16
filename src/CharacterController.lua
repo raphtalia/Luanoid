@@ -110,6 +110,14 @@ function CHARACTER_CONTROLLER_METATABLE:__index(i)
             simulation.
         ]=]
         return rawget(self, "_raycastResults")
+    elseif i == "UpDirection" then
+        --[=[
+            @within CharacterController
+            @readonly
+            @prop UpDirection Vector3
+            The direction the CharacterController should treat as up.
+        ]=]
+        return rawget(self, "_upDirection")
     elseif i == "Stores" then
         --[=[
             @within CharacterController
@@ -133,6 +141,9 @@ function CHARACTER_CONTROLLER_METATABLE:__newindex(i, v)
     elseif i == "FiniteStateMachine" then
         t.FiniteStateMachine(v)
         rawset(self, "_finiteStateMachine", v)
+    elseif i == "UpDirection" then
+        t.UpDirection(v)
+        rawset(self, "_upDirection", v)
     else
         error(i.. " is not a valid member of CharacterController or is unassignable", 2)
     end
@@ -170,6 +181,7 @@ function CharacterController.new(luanoid, states, fsm)
         _stateEnterPosition = Vector3.new(),
         _raycastResult = nil,
         _raycastResults = nil,
+        _upDirection = Vector3.new(0, 1, 0),
 
         -- Place for state handlers to read/write values to
         _stores = {}
@@ -226,6 +238,18 @@ end
 ]=]
 function CHARACTER_CONTROLLER_METATABLE:GetStateElapsedTime()
     return tick() - self._stateEnterTick
+end
+
+function CHARACTER_CONTROLLER_METATABLE:GetGravityForce()
+    local upDirection = self.UpDirection.Unit
+
+    if upDirection == Vector3.new(0, 1, 0) then
+        return Vector3.new()
+    else
+        local mass = self.Luanoid.RootPart.AssemblyMass
+        local g = workspace.Gravity
+        return -upDirection * mass * g + Vector3.new(0, mass * g, 0)
+    end
 end
 
 --[=[
@@ -289,7 +313,7 @@ function CHARACTER_CONTROLLER_METATABLE:_step(dt)
         end
 
         local hrpSize = rootPart.Size
-        local rayDir = Vector3.new(0, -(luanoid.HipHeight + hrpSize.Y / 2) - RAYCAST_CUSHION, 0)
+        local rayDir = -self.UpDirection * ((luanoid.HipHeight + hrpSize.Y / 2) + RAYCAST_CUSHION)
         local center = self:CastCollideOnly(
             rootPart.Position,
             rayDir

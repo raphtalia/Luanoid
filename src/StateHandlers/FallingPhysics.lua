@@ -28,8 +28,17 @@ end
 
 function FallingPhysics.step(characterController)
     local luanoid = characterController.Luanoid
-    luanoid.Mover.Enabled = false
-	luanoid.Aligner.Enabled = false
+	local mover = luanoid.Mover
+	local aligner = luanoid.Aligner
+
+	-- Inverting the X just works
+    local lookDir = luanoid.LookDirection
+    lookDir = Vector3.new(-lookDir.X, 0, lookDir.Z)
+
+    mover.Enabled = true
+	aligner.Enabled = true
+	mover.Force = characterController:GetGravityForce()
+	aligner.Attachment0.CFrame = CFrame.lookAt(Vector3.new(), lookDir, characterController.UpDirection)
 
 	local rootPart = luanoid.RootPart
 	local assemblyVel = rootPart.AssemblyLinearVelocity

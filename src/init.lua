@@ -414,7 +414,7 @@ function Luanoid:constructor(existingCharacter)
 
     local character = self.Character
     character:SetAttribute("MoveDirection", Vector3.new())
-    character:SetAttribute("LookDirection", Vector3.new())
+    character:SetAttribute("LookDirection", Vector3.new(0, 0, -1)) -- TODO: Default this to the RootPart's front direction
     character:SetAttribute("Health", 100)
     character:SetAttribute("MaxHealth", 100)
     character:SetAttribute("WalkSpeed", 16)
