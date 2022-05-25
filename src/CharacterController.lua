@@ -331,8 +331,8 @@ function CHARACTER_CONTROLLER_METATABLE:_step(dt)
             Center = center,
             TopLeft = topleft,
             TopRight = topright,
-            bottomleft = bottomleft,
-            bottomright = bottomright,
+            BottomLeft = bottomleft,
+            BottomRight = bottomright,
         })
 
         local curState = luanoid:GetState()
