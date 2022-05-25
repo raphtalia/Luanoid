@@ -33,7 +33,7 @@ function IdlingWalkingJumping.entered(characterController)
     if curState == CharacterState.Jumping then
         luanoid.Jumping:Fire(true)
         local rootPart = luanoid.RootPart
-        rootPart:ApplyImpulse(Vector3.new(0, luanoid.JumpPower * rootPart.AssemblyMass, 0))
+        rootPart:ApplyImpulse(characterController.UpDirection * luanoid.JumpPower * rootPart.AssemblyMass)
     end
 end
 
