@@ -47,29 +47,25 @@ function Animator.new(luanoid)
     --[=[
         @within Animator
         @readonly
-        @tag event
-        @prop AnimationPlayed Signal (animationTrack: AnimationTrack)
+        @prop AnimationPlayed Signal<(animationTrack: AnimationTrack)>
         Fires after `PlayAnimation()` is executed.
     ]=]
     --[=[
         @within Animator
         @readonly
-        @tag event
-        @prop AnimationStopped Signal (animationTrack: AnimationTrack)
+        @prop AnimationStopped Signal<(animationTrack: AnimationTrack)>
         Fires after `StopAnimation()` is executed.
     ]=]
     --[=[
         @within Animator
         @readonly
-        @tag event
-        @prop AnimationLoaded Signal (animationTrack: AnimationTrack)
+        @prop AnimationLoaded Signal<(animationTrack: AnimationTrack)>
         Fires after `LoadAnimation()` is executed.
     ]=]
     --[=[
         @within Animator
         @readonly
-        @tag event
-        @prop AnimationUnloading Signal (animationTrack: AnimationTrack)
+        @prop AnimationUnloading Signal<(animationTrack: AnimationTrack)>
         Fires while `UnloadAnimation()` is executing.
     ]=]
     local self =  setmetatable({

@@ -195,8 +195,7 @@ function LUANOID_METATABLE:__index(i)
         --[=[
             @within Luanoid
             @readonly
-            @tag event
-            @prop RigChanged Signal (character: Model)
+            @prop RigChanged Signal<(character: Model)>
             Fires after `SetRig()` finishes executing.
         ]=]
         return rawget(self, "_rigChanged")
@@ -204,8 +203,7 @@ function LUANOID_METATABLE:__index(i)
         --[=[
             @within Luanoid
             @readonly
-            @tag event
-            @prop AccessoryAdded Signal (accessory: Accessory | Model | BasePart)
+            @prop AccessoryAdded Signal<(accessory: Accessory | Model | BasePart)>
             Fires after `AddAccessory()` finishes executing.
         ]=]
         return rawget(self, "_accessoryAdded")
@@ -213,8 +211,7 @@ function LUANOID_METATABLE:__index(i)
         --[=[
             @within Luanoid
             @readonly
-            @tag event
-            @prop AccessoryRemoving Signal (accessory: Accessory | Model | BasePart)
+            @prop AccessoryRemoving Signal<(accessory: Accessory | Model | BasePart)>
             Fires after `RemoveAccessory()` finishes executing.
         ]=]
         return rawget(self, "_accessoryRemoving")
@@ -222,8 +219,7 @@ function LUANOID_METATABLE:__index(i)
         --[=[
             @within Luanoid
             @readonly
-            @tag event
-            @prop Died Signal (isDead: boolean)
+            @prop Died Signal<(isDead: boolean)>
             Fires after entering or while leaving `CharacterState.Dead`
         ]=]
         return rawget(self, "_died")
@@ -231,8 +227,7 @@ function LUANOID_METATABLE:__index(i)
         --[=[
             @within Luanoid
             @readonly
-            @tag event
-            @prop FreeFalling Signal (isFreeFalling: boolean)
+            @prop FreeFalling Signal<(isFreeFalling: boolean)>
             Fires after entering or while leaving `CharacterState.FreeFalling`
         ]=]
         return rawget(self, "_freeFalling")
@@ -240,8 +235,7 @@ function LUANOID_METATABLE:__index(i)
         --[=[
             @within Luanoid
             @readonly
-            @tag event
-            @prop HealthChanged Signal (newHealth: number)
+            @prop HealthChanged Signal<(newHealth: number)>
             Fires after Health is changed
         ]=]
         return rawget(self, "_healthChanged")
@@ -249,8 +243,7 @@ function LUANOID_METATABLE:__index(i)
         --[=[
             @within Luanoid
             @readonly
-            @tag event
-            @prop Jumping Signal (isJumping: boolean)
+            @prop Jumping Signal<(isJumping: boolean)>
             Fires after entering or while leaving `CharacterState.Jumping`
         ]=]
         return rawget(self, "_jumping")
@@ -258,8 +251,7 @@ function LUANOID_METATABLE:__index(i)
         --[=[
             @within Luanoid
             @readonly
-            @tag event
-            @prop MoveToFinished Signal (success: boolean)
+            @prop MoveToFinished Signal<(success: boolean)>
             Fires after a promise from `MoveTo()` resolves.
         ]=]
         return rawget(self, "_moveToFinished")
@@ -267,17 +259,15 @@ function LUANOID_METATABLE:__index(i)
         --[=[
             @within Luanoid
             @readonly
-            @tag event
             @unreleased
-            @prop Seated Signal
+            @prop Seated Signal<>
         ]=]
         return rawget(self, "_seated")
     elseif i == "StateChanged" then
         --[=[
             @within Luanoid
             @readonly
-            @tag event
-            @prop StateChanged Signal (newState: CharacterState)
+            @prop StateChanged Signal<(newState: CharacterState)>
             Fires after the Luanoid's state is changed.
         ]=]
         return rawget(self, "_stateChanged")
@@ -285,17 +275,15 @@ function LUANOID_METATABLE:__index(i)
         --[=[
             @within Luanoid
             @readonly
-            @tag event
             @unreleased
-            @prop Touched Signal
+            @prop Touched Signal<>
         ]=]
         return rawget(self, "_touched")
     elseif i == "Destroying" then
         --[=[
             @within Luanoid
             @readonly
-            @tag event
-            @prop Destroying Signal
+            @prop Destroying Signal<>
             Fires while `Destroy()` is executing.
         ]=]
         return rawget(self, "_destroying")
