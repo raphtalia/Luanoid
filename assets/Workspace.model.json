@@ -8,7 +8,7 @@
 				"Color": [0.356863, 0.356863, 0.356863],
 				"Locked": true,
 				"Size": [2048, 16, 2048],
-				"Position": [0, -8, 0],
+				"CFrame": [0, -8, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
 				"Anchored": true,
 				"TopSurface": "Smooth",
 				"BottomSurface": "Smooth"
@@ -23,6 +23,27 @@
 						"StudsPerTileV": 8,
 						"Texture": "rbxassetid://6372755229",
 						"Transparency": 0.8,
+						"Face": "Top"
+					}
+				}
+			]
+		},
+		{
+			"Name": "SpawnLocation",
+			"ClassName": "SpawnLocation",
+			"Properties": {
+				"Size": [12, 1, 12],
+				"CFrame": [0, 0.5, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+				"Anchored": true,
+				"TopSurface": "Smooth",
+				"BottomSurface": "Smooth"
+			},
+			"Children": [
+				{
+					"Name": "Decal",
+					"ClassName": "Decal",
+					"Properties": {
+						"Texture": "rbxasset://textures/SpawnLocation.png",
 						"Face": "Top"
 					}
 				}

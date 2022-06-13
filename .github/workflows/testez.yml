@@ -1,0 +1,33 @@
+name: TestEZ
+
+on:
+    push:
+        paths:
+            - ".github/workflows/testez.yml"
+            - "src/**"
+            # - 'package.json'
+    workflow_dispatch:
+
+jobs:
+    lint:
+        name: Unit Tests
+        runs-on: windows-latest
+
+        steps:
+            - uses: actions/checkout@v1
+
+            - uses: Roblox/setup-foreman@v1
+              with:
+                  version: "^1.0.0"
+                  token: ${{ secrets.GITHUB_TOKEN }}
+
+            - uses: OrbitalOwen/roblox-win-installer-action@1.1
+              with:
+                  cookie: ${{ secrets.ROBLOSECURITY }}
+                  token: ${{ secrets.GITHUB_TOKEN }}
+
+            - run: wally install
+            - run: "./scripts/build.ps1"
+              shell: pwsh
+            - run: "./scripts/test.ps1"
+              shell: pwsh
