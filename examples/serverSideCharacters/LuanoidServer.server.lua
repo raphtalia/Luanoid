@@ -3,10 +3,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Luanoid = require(ReplicatedStorage.Packages.Luanoid)
 
-local DoguXCV = ReplicatedStorage:WaitForChild("DoguXCV")
-
-Players.CharacterAutoLoads = false
-
 local function makeLuanoid(player)
     local luanoid = Luanoid.new()
     local character = luanoid.Character
@@ -23,10 +19,13 @@ local function makeLuanoid(player)
     ]]
     luanoid:SetNetworkOwner(player)
     luanoid.Name = player.Name
+    luanoid.RootPart.CFrame = CFrame.new(0, 5, 0)
     character.Parent = workspace
-    luanoid:SetRig(DoguXCV:Clone())
     local userId = player.UserId
-    luanoid:ApplyDescription(if userId > 0 then Players:GetHumanoidDescriptionFromUserId(player.UserId) else Instance.new("HumanoidDescription"))
+    luanoid:ApplyDescription(
+        if userId > 0 then Players:GetHumanoidDescriptionFromUserId(player.UserId) else Instance.new("HumanoidDescription"),
+        Enum.HumanoidRigType.R15
+    )
     player.Character = character
 end
 

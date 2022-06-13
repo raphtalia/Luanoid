@@ -1,0 +1,47 @@
+{
+	"name": "Luanoid - Example",
+	"tree": {
+		"$className": "DataModel",
+
+		"Workspace": {
+			"$path": "../../assets/Workspace.model.json",
+			"$ignoreUnknownInstances": true
+		},
+		"Lighting": {
+			"$path": "../../assets/Lighting.model.json",
+			"$ignoreUnknownInstances": true
+		},
+		"Players": {
+			"$path": "../../assets/Players.model.json",
+			"$ignoreUnknownInstances": true
+		},
+
+		"ReplicatedStorage": {
+			"$className": "ReplicatedStorage",
+
+			"Packages": {
+				"$path": "../../Packages",
+				"Luanoid": { "$path": "../.." }
+			}
+		},
+
+		"ServerScriptService": {
+			"$className": "ServerScriptService",
+
+			"LuanoidServer": { "$path": "LuanoidServer.server.lua" }
+		},
+
+		"StarterPlayer": {
+			"$className": "StarterPlayer",
+
+			"StarterPlayerScripts": {
+				"$className": "StarterPlayerScripts",
+
+				"LuanoidClient": { "$path": "LuanoidClient.client.lua" },
+				"PlayerModule": { "$path": "../../assets/PlayerModule" },
+				"PlayerScriptsLoader": { "$className": "LocalScript" },
+				"RbxCharacterSounds": { "$className": "LocalScript" }
+			}
+		}
+	}
+}

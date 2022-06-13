@@ -3,11 +3,10 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 local Luanoid = require(ReplicatedStorage.Packages.Luanoid)
-local PlayerModule = require(ReplicatedStorage.Packages.PlayerModule)
+local PlayerModule = require(script.Parent:WaitForChild("PlayerModule"))
 
 local Camera = workspace.CurrentCamera
 local LocalPlayer = Players.LocalPlayer
-local DoguXCV = ReplicatedStorage:WaitForChild("DoguXCV")
 
 local currentLuanoid
 
@@ -15,12 +14,13 @@ local function makeLuanoid(character)
     character:WaitForChild("HumanoidRootPart")
 
     local luanoid = Luanoid.new(character)
-    luanoid:SetRig(DoguXCV:Clone())
-
     local player = Players:GetPlayerFromCharacter(character)
     if player then
         local userId = player.UserId
-        luanoid:ApplyDescription(if userId > 0 then Players:GetHumanoidDescriptionFromUserId(player.UserId) else Instance.new("HumanoidDescription"))
+        luanoid:ApplyDescription(
+            if userId > 0 then Players:GetHumanoidDescriptionFromUserId(player.UserId) else Instance.new("HumanoidDescription"),
+            Enum.HumanoidRigType.R15
+        )
 
         if player == LocalPlayer then
             luanoid.CharacterController:Start()

@@ -3,7 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 local Luanoid = require(ReplicatedStorage.Packages.Luanoid)
-local PlayerModule = require(ReplicatedStorage.Packages.PlayerModule)
+local PlayerModule = require(script.Parent:WaitForChild("PlayerModule"))
 
 local Camera = workspace.CurrentCamera
 local LocalPlayer = Players.LocalPlayer
@@ -35,6 +35,7 @@ for _,player in pairs(Players:GetPlayers()) do
 end
 
 Players.PlayerAdded:Connect(playerAdded)
+playerAdded(LocalPlayer)
 
 --[[
     This simply taps into the existing Roblox character scripts and sets the

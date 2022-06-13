@@ -1,0 +1,56 @@
+{
+	"ClassName": "Lighting",
+	"Properties": {
+		"Ambient": [0.27451, 0.27451, 0.27451],
+		"Brightness": 3,
+		"EnvironmentDiffuseScale": 1,
+		"EnvironmentSpecularScale": 1,
+		"GlobalShadows": true,
+		"OutdoorAmbient": [0.27451, 0.27451, 0.27451],
+		"ShadowSoftness": 0.2,
+		"Technology": "ShadowMap"
+	},
+	"Children": [
+		{
+			"Name": "Atmosphere",
+			"ClassName": "Atmosphere",
+			"Properties": {
+				"Density": 0.3,
+				"Offset": 0.25,
+				"Color": [0.780392, 0.780392, 0.780392],
+				"Decay": [0.415686, 0.439216, 0.490196]
+			}
+		},
+		{
+			"Name": "Sky",
+			"ClassName": "Sky",
+			"Properties": {
+				"MoonTextureId": "rbxassetid://6444320592",
+				"SkyboxBk": "rbxassetid://6444884337",
+				"SkyboxDn": "rbxassetid://6444884785",
+				"SkyboxFt": "rbxassetid://6444884337",
+				"SkyboxLf": "rbxassetid://6444884337",
+				"SkyboxRt": "rbxassetid://6444884337",
+				"SkyboxUp": "rbxassetid://6412503613",
+				"SunAngularSize": 11,
+				"SunTextureId": "rbxassetid://6196665106"
+			}
+		},
+		{
+			"Name": "Bloom",
+			"ClassName": "BloomEffect",
+			"Properties": {
+				"Intensity": 1,
+				"Threshold": 2
+			}
+		},
+		{
+			"Name": "SunRays",
+			"ClassName": "SunRaysEffect",
+			"Properties": {
+				"Intensity": 0.01,
+				"Spread": 0.1
+			}
+		}
+	]
+}

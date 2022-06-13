@@ -3,8 +3,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Luanoid = require(ReplicatedStorage.Packages.Luanoid)
 
-Players.CharacterAutoLoads = false
-
 local function makeLuanoid(player)
     local luanoid = Luanoid.new()
     local character = luanoid.Character
@@ -21,6 +19,7 @@ local function makeLuanoid(player)
     ]]
     luanoid:SetNetworkOwner(player)
     luanoid.Name = player.Name
+    luanoid.RootPart.CFrame = CFrame.new(0, 5, 0)
     character.Parent = workspace
     player.Character = character
 end

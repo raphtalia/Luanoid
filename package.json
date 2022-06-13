@@ -6,7 +6,10 @@
 	"typings": "types/index.d.ts",
 	"scripts": {
 		"eslint": "eslint \"types/**/*.ts\" --max-warnings 0",
-		"eslint-fix": "eslint \"types/**/*.ts\" --fix"
+		"eslint-fix": "eslint \"types/**/*.ts\" --fix",
+		"build:clientExample": "rojo build examples/clientSideCharacters -o examples/clientSideCharacters/example.rbxl",
+		"build:serverExample": "rojo build examples/serverSideCharacters -o examples/serverSideCharacters/example.rbxl",
+		"build:examples": "npm run build:clientExample && npm run build:serverExample"
 	},
 	"keywords": [
 		"roblox",

@@ -1,0 +1,32 @@
+{
+	"ClassName": "Workspace",
+	"Children": [
+		{
+			"Name": "Baseplate",
+			"ClassName": "Part",
+			"Properties": {
+				"Color": [0.356863, 0.356863, 0.356863],
+				"Locked": true,
+				"Size": [2048, 16, 2048],
+				"Position": [0, -8, 0],
+				"Anchored": true,
+				"TopSurface": "Smooth",
+				"BottomSurface": "Smooth"
+			},
+			"Children": [
+				{
+					"Name": "Texture",
+					"ClassName": "Texture",
+					"Properties": {
+						"Color3": [0, 0, 0],
+						"StudsPerTileU": 8,
+						"StudsPerTileV": 8,
+						"Texture": "rbxassetid://6372755229",
+						"Transparency": 0.8,
+						"Face": "Top"
+					}
+				}
+			]
+		}
+	]
+}
