@@ -1,6 +1,5 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Luanoid = require(script.Parent)
 
-local Luanoid = require(ReplicatedStorage.Packages.Luanoid)
 return function()
     describe("Luanoid", function()
         local l15
