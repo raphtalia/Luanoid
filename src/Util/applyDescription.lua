@@ -1,5 +1,5 @@
 --[[
-    Applies HumanoidDescriptions to R15-like rigs such as Dogu15.
+    Applies HumanoidDescriptions to R15 and R6 rigs
 ]]
 local Players = game:GetService("Players")
 
@@ -16,7 +16,6 @@ end
 
 -- TODO: Implement support for body scaling with existing rigs
 return function(luanoid, humanoidDescription: HumanoidDescription, rigType: Enum.HumanoidRigType): nil
-    -- Currently only R15 support
     local rig = Players:CreateHumanoidModelFromDescription(humanoidDescription, rigType or Enum.HumanoidRigType.R15)
     local character = luanoid.Character
 
@@ -30,9 +29,11 @@ return function(luanoid, humanoidDescription: HumanoidDescription, rigType: Enum
     local shirtId = if humanoidDescription.Shirt > 0 then rig.Shirt.ShirtTemplate else if humanoidDescription.Shirt == 0 then "" else nil
     local pantsId = if humanoidDescription.Pants > 0 then rig.Pants.PantsTemplate else if humanoidDescription.Shirt == 0 then "" else nil
     if rigType == Enum.HumanoidRigType.R15 then
+        -- Only R15 rigs have Swimming animations
         luanoid.Animator:LoadAnimation("Swimming", rig.Animate.swim:FindFirstChildWhichIsA("Animation")).Priority = Enum.AnimationPriority.Movement
         luanoid.Animator:LoadAnimation("SwimIdling", rig.Animate.swimidle:FindFirstChildWhichIsA("Animation")).Priority = Enum.AnimationPriority.Movement
 
+        -- Only R15 rigs support clothing at the moment
         rig.LeftUpperArm.TextureID = shirtId
         rig.LeftLowerArm.TextureID = shirtId
         rig.LeftHand.TextureID = shirtId
@@ -57,7 +58,11 @@ return function(luanoid, humanoidDescription: HumanoidDescription, rigType: Enum
                 existingFace:Destroy()
             end
 
-            rig.Head.face.Parent = head
+            -- Headless doesn't have a face
+            local newFace = rig.Head:FindFirstChild("face")
+            if newFace then
+                newFace.Parent = head
+            end
         end
 
         decorate(character:FindFirstChild("LeftUpperArm"), humanoidDescription.LeftArmColor, shirtId)

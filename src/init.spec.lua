@@ -350,6 +350,15 @@ return function()
             expect(character.Head.face.Texture:match("209713952")).to.never.equal(nil)
         end)
 
+        it("ApplyDescription() should support faceless rigs", function()
+            local humanoidDescription = Instance.new("HumanoidDescription")
+            humanoidDescription.Head = 134082579
+
+            expect(function()
+                l15:ApplyDescription(humanoidDescription)
+            end).never.to.throw()
+        end)
+
         it("BuildRigFromAttachments() should not error", function()
             expect(function()
                 l15:BuildRigFromAttachments()
