@@ -148,7 +148,10 @@ function IdlingWalkingJumping.step(characterController, dt)
 
         -- Look direction stuff
         if moveDir.Magnitude > 0 and luanoid.AutoRotate then
+            aligner.MaxAngularVelocity = math.huge
             luanoid.LookDirection = moveDir
+        else
+            aligner.MaxAngularVelocity = 0
         end
 
         if lookDir.Magnitude > 0 then

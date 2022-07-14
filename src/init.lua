@@ -434,7 +434,7 @@ function Luanoid:constructor(existingCharacter)
         local aligner = Instance.new("AlignOrientation")
         aligner.Name = "Aligner"
         aligner.Mode = Enum.OrientationAlignmentMode.OneAttachment
-        aligner.Responsiveness = 20
+        aligner.Responsiveness = 40
         aligner.Attachment0 = moveDirAttachment
         aligner.Parent = humanoidRootPart
 
