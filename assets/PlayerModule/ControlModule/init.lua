@@ -17,7 +17,6 @@ ControlModule.__index = ControlModule
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
-local Workspace = game:GetService("Workspace")
 local UserGameSettings = UserSettings():GetService("UserGameSettings")
 
 -- Roblox User Input Control Modules - each returns a new() constructor function used to create controllers as needed
@@ -100,22 +99,19 @@ function ControlModule.new()
 	self.activeControlModule = nil	-- Used to prevent unnecessarily expensive checks on each input event
 	self.activeController = nil
 	self.touchJumpController = nil
-	self.moveFunction = Players.LocalPlayer.Move
-	self.humanoid = nil
 	self.lastInputType = Enum.UserInputType.None
 
 	-- For Roblox self.vehicleController
-	self.humanoidSeatedConn = nil
 	self.vehicleController = nil
 
 	self.touchControlFrame = nil
 
 	self.vehicleController = VehicleController.new(CONTROL_ACTION_PRIORITY)
 
-	Players.LocalPlayer.CharacterAdded:Connect(function(char) self:OnCharacterAdded(char) end)
-	Players.LocalPlayer.CharacterRemoving:Connect(function(char) self:OnCharacterRemoving(char) end)
+	Players.LocalPlayer.CharacterAdded:Connect(function() self:OnCharacterAdded() end)
+	Players.LocalPlayer.CharacterRemoving:Connect(function() self:OnCharacterRemoving() end)
 	if Players.LocalPlayer.Character then
-		self:OnCharacterAdded(Players.LocalPlayer.Character)
+		self:OnCharacterAdded()
 	end
 
 	RunService:BindToRenderStep("ControlScriptRenderstep", Enum.RenderPriority.Input.Value, function(dt)
@@ -218,10 +214,6 @@ end
 function ControlModule:Disable()
 	if self.activeController then
 		self.activeController:Enable(false)
-
-		if self.moveFunction then
-			self.moveFunction(Players.LocalPlayer, Vector3.new(0,0,0), true)
-		end
 	end
 end
 
@@ -281,38 +273,8 @@ function ControlModule:SelectTouchModule()
 	return touchModule, true
 end
 
-local function calculateRawMoveVector(humanoid, cameraRelativeMoveVector)
-	local camera = Workspace.CurrentCamera
-	if not camera then
-		return cameraRelativeMoveVector
-	end
-
-	if humanoid:GetState() == Enum.HumanoidStateType.Swimming then
-		return camera.CFrame:VectorToWorldSpace(cameraRelativeMoveVector)
-	end
-
-	local c, s
-	local _, _, _, R00, R01, R02, _, _, R12, _, _, R22 = camera.CFrame:GetComponents()
-	if R12 < 1 and R12 > -1 then
-		-- X and Z components from back vector.
-		c = R22
-		s = R02
-	else
-		-- In this case the camera is looking straight up or straight down.
-		-- Use X components from right and up vectors.
-		c = R00
-		s = -R01*math.sign(R12)
-	end
-	local norm = math.sqrt(c*c + s*s)
-	return Vector3.new(
-		(c*cameraRelativeMoveVector.x + s*cameraRelativeMoveVector.z)/norm,
-		0,
-		(c*cameraRelativeMoveVector.z - s*cameraRelativeMoveVector.x)/norm
-	)
-end
-
 function ControlModule:OnRenderStepped(dt)
-	if self.activeController and self.activeController.enabled and self.humanoid then
+	if self.activeController and self.activeController.enabled then
 		-- Give the controller a chance to adjust its state
 		self.activeController:OnRenderStepped(dt)
 
@@ -338,25 +300,6 @@ function ControlModule:OnRenderStepped(dt)
 		if self.vehicleController then
 			moveVector, vehicleConsumedInput = self.vehicleController:Update(moveVector, cameraRelative, self.activeControlModule==Gamepad)
 		end
-
-		-- If not, move the player
-		-- Verification of vehicleConsumedInput is commented out to preserve legacy behavior,
-		-- in case some game relies on Humanoid.MoveDirection still being set while in a VehicleSeat
-		--if not vehicleConsumedInput then
-			if cameraRelative then
-				moveVector = calculateRawMoveVector(self.humanoid, moveVector)
-			end
-			self.moveFunction(Players.LocalPlayer, moveVector, false)
-		--end
-
-		-- And make them jump if needed
-		if FFlagUserFixExternalJumpRequest then
-			if self.activeController:GetIsJumping() or (self.touchJumpController and self.touchJumpController:GetIsJumping()) then
-				self.humanoid.Jump = true
-			end
-		else
-			self.humanoid.Jump = self.activeController:GetIsJumping() or (self.touchJumpController and self.touchJumpController:GetIsJumping())
-		end
 	end
 end
 
@@ -375,29 +318,13 @@ function ControlModule:OnHumanoidSeated(active, currentSeatPart)
 	end
 end
 
-function ControlModule:OnCharacterAdded(char)
-	self.humanoid = char:FindFirstChildOfClass("Humanoid")
-	while not self.humanoid do
-		char.ChildAdded:wait()
-		self.humanoid = char:FindFirstChildOfClass("Humanoid")
-	end
-
+function ControlModule:OnCharacterAdded()
 	if self.touchGui then
 		self.touchGui.Enabled = true
 	end
-
-	if self.humanoidSeatedConn then
-		self.humanoidSeatedConn:Disconnect()
-		self.humanoidSeatedConn = nil
-	end
-	self.humanoidSeatedConn = self.humanoid.Seated:Connect(function(active, currentSeatPart)
-		self:OnHumanoidSeated(active, currentSeatPart)
-	end)
 end
 
-function ControlModule:OnCharacterRemoving(char)
-	self.humanoid = nil
-
+function ControlModule:OnCharacterRemoving()
 	if self.touchGui then
 		self.touchGui.Enabled = false
 	end
@@ -495,7 +422,6 @@ function ControlModule:CreateTouchGuiContainer()
 	self.touchGui.Name = "TouchGui"
 	self.touchGui.ResetOnSpawn = false
 	self.touchGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-	self.touchGui.Enabled = self.humanoid ~= nil
 
 	self.touchControlFrame = Instance.new("Frame")
 	self.touchControlFrame.Name = "TouchControlFrame"
